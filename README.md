@@ -1,2 +1,3 @@
-# nasa-search
-Project for RsSchool react-2025-q1
+# React + TypeScript + Vite
+
+rsSchool React 2025 Q1
