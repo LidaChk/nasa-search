@@ -1,2 +1,4 @@
 
+git add .
 npm run format:fix
+npm run lint:fix
