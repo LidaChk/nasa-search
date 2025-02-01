@@ -32,7 +32,7 @@ export interface NasaApiResponse {
   };
 }
 
-type ImageResult = nasaCollectionItem[];
+export type ImageResult = nasaCollectionItem[];
 
 export async function searchImages(params: SearchParams): Promise<ImageResult> {
   const { query, page = 1, pageSize = 10 } = params;
