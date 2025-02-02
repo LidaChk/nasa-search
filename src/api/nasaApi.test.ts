@@ -28,7 +28,7 @@ describe('NASA API', () => {
       expect.any(Object)
     );
     expect(result).toHaveLength(mockNASAData.collection.items.length);
-    expect(result[0].data[0].title).toBe(
+    expect(result[0].title).toBe(
       mockNASAData.collection.items[0].data[0].title
     );
   });

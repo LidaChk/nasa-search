@@ -2,14 +2,16 @@ import './App.css';
 
 import { Component } from 'react';
 import ErrorButton from './components/errorButton/errorButton';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import Search from './components/Search/Search';
+import ErrorBoundary from './components/errorBoundary/errorBoundary';
+import Search from './components/search/search';
 import { LS_KEY_SEARCH_TERM } from './constants/constants';
-import { ImageResult, searchImages } from './api/nasaApi';
+import { searchResultItem } from './types/types';
+import { searchImages } from './api/nasaApi';
+import CardList from './components/cardList/cardList';
 
 type AppProps = object;
 interface AppState {
-  items: ImageResult;
+  items: searchResultItem[];
   isLoading: boolean;
   error: string | null;
   searchTerm: string;
@@ -64,10 +66,7 @@ class App extends Component<AppProps, AppState> {
           onSearch={this.onSearch}
           initialSearchTerm={this.state.searchTerm}
         />
-        {
-          // TODO
-          // <CardList items={[]} />
-        }
+        <CardList items={this.state.items} isLoading={this.state.isLoading} />
         <div className="app">
           <ErrorButton />
         </div>
