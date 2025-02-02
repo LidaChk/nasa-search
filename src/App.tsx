@@ -8,6 +8,7 @@ import { LS_KEY_SEARCH_TERM } from './constants/constants';
 import { searchResultItem } from './types/types';
 import { searchImages } from './api/nasaApi';
 import CardList from './components/cardList/cardList';
+import ErrorCatchWrapper from './components/errorCatchWrapper/errorCatchWrapper';
 
 type AppProps = object;
 interface AppState {
@@ -54,7 +55,6 @@ class App extends Component<AppProps, AppState> {
 
     this.setState({ searchTerm: newSearchTerm }, () => {
       this.fetchImages(newSearchTerm);
-      console.log('Search term:', newSearchTerm);
     });
   };
 
@@ -62,14 +62,16 @@ class App extends Component<AppProps, AppState> {
     return (
       <ErrorBoundary>
         <h1>NASA Image search</h1>
-        <Search
-          onSearch={this.onSearch}
-          initialSearchTerm={this.state.searchTerm}
-        />
-        <CardList items={this.state.items} isLoading={this.state.isLoading} />
-        <div className="app">
-          <ErrorButton />
-        </div>
+        <ErrorCatchWrapper error={this.state.error}>
+          <Search
+            onSearch={this.onSearch}
+            initialSearchTerm={this.state.searchTerm}
+          />
+          <CardList items={this.state.items} isLoading={this.state.isLoading} />
+          <div className="app">
+            <ErrorButton />
+          </div>
+        </ErrorCatchWrapper>
       </ErrorBoundary>
     );
   }

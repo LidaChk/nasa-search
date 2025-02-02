@@ -76,11 +76,22 @@ export async function searchImages(
       },
     });
 
+    if (response.status === 404) {
+      throw new Error(`Resource not found (404): ${url.pathname}`);
+    }
+
     if (!response.ok) {
-      throw new Error(`NASA API error: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(
+        `NASA API error: ${response.status} ${response.statusText}\n${errorText}`
+      );
     }
 
     const data: NasaApiResponse = await response.json();
+
+    if (!data?.collection?.items) {
+      throw new Error('Invalid response format from NASA API');
+    }
 
     return data.collection.items.map(mapNasaCollectionItemToSearchResultItem);
   } catch (error) {
