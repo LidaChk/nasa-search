@@ -1,52 +1,36 @@
-import { Component } from 'react';
+import React, { useState } from 'react';
 import './search.css';
 
-interface Props {
+interface SearchProps {
   onSearch: (searchTerm: string) => void;
   initialSearchTerm: string;
 }
 
-interface State {
-  searchTerm: string;
-}
+const Search: React.FC<SearchProps> = ({ onSearch, initialSearchTerm }) => {
+  const [searchTerm, setSearchTerm] = useState<string>(initialSearchTerm);
 
-class Search extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      searchTerm: props.initialSearchTerm,
-    };
-  }
-
-  handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchTerm: e.target.value });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
-  handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const trimmedSearchTerm = this.state.searchTerm.trim();
-    this.props.onSearch(trimmedSearchTerm);
+    const trimmedSearchTerm = searchTerm.trim();
+    onSearch(trimmedSearchTerm);
   };
-  render() {
-    const { searchTerm } = this.state;
 
-    return (
-      <form
-        onSubmit={this.handleSearch}
-        className="search-form"
-        aria-label="search"
-      >
-        <input
-          type="search"
-          className="search-input"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={this.handleInputChange}
-        />
-        <button className="search-button">Search</button>
-      </form>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSearch} className="search-form" aria-label="search">
+      <input
+        type="search"
+        className="search-input"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={handleInputChange}
+      />
+      <button className="search-button">Search</button>
+    </form>
+  );
+};
 
 export default Search;
