@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React from 'react';
 import './card.css';
 
 interface CardProps {
@@ -8,25 +8,21 @@ interface CardProps {
   preview: URL;
 }
 
-class Card extends Component<CardProps> {
-  render() {
-    const { nasaId, title, description, preview } = this.props;
-
-    return (
-      <div className="card" key={nasaId}>
-        <div className="card__image-container">
-          <img src={preview.href} alt={title} className="card__image" />
-        </div>
-        <div className="card__content">
-          <h3 className="card__title">{title}</h3>
-          <p
-            className="card__description"
-            dangerouslySetInnerHTML={{ __html: description }}
-          ></p>
-        </div>
+const Card: React.FC<CardProps> = ({ nasaId, title, description, preview }) => {
+  return (
+    <div className="card" key={nasaId}>
+      <div className="card__image-container">
+        <img src={preview.href} alt={title} className="card__image" />
       </div>
-    );
-  }
-}
+      <div className="card__content">
+        <h3 className="card__title">{title}</h3>
+        <p
+          className="card__description"
+          dangerouslySetInnerHTML={{ __html: description }}
+        ></p>
+      </div>
+    </div>
+  );
+};
 
 export default Card;
