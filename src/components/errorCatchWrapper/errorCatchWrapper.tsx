@@ -1,17 +1,18 @@
-import { Component, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
-interface Props {
+interface ErrorCatchWrapperProps {
   error: string | null;
   children: ReactNode;
 }
 
-class ErrorCatchWrapper extends Component<Props> {
-  render() {
-    if (this.props.error) {
-      throw new Error(this.props.error);
-    }
-    return this.props.children;
+const ErrorCatchWrapper: React.FC<ErrorCatchWrapperProps> = ({
+  error,
+  children,
+}) => {
+  if (error) {
+    throw new Error(error);
   }
-}
+  return children;
+};
 
 export default ErrorCatchWrapper;
