@@ -1,7 +1,6 @@
 import './App.css';
 
 import { Component } from 'react';
-import ErrorButton from './components/errorButton/errorButton';
 import ErrorBoundary from './components/errorBoundary/errorBoundary';
 import Search from './components/search/search';
 import { LS_KEY_SEARCH_TERM } from './constants/constants';
@@ -68,9 +67,7 @@ class App extends Component<AppProps, AppState> {
             initialSearchTerm={this.state.searchTerm}
           />
           <CardList items={this.state.items} isLoading={this.state.isLoading} />
-          <div className="app">
-            <ErrorButton />
-          </div>
+          <div className="app"></div>
         </ErrorCatchWrapper>
       </ErrorBoundary>
     );
