@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React from 'react';
 import './cardList.css';
 import { searchResultItem } from '../../types/types';
 import Loader from '../loader/loader';
@@ -10,24 +10,20 @@ interface CardListProps {
   isLoading: boolean;
 }
 
-class CardList extends Component<CardListProps> {
-  render() {
-    const { items, isLoading } = this.props;
+const CardList: React.FC<CardListProps> = ({ items, isLoading }) => {
+  const className = `card-list${isLoading ? ' card-list__loader' : ''}`;
 
-    const className = `card-list${isLoading ? ' card-list__loader' : ''}`;
-
-    return (
-      <div className={className}>
-        {isLoading ? (
-          <Loader />
-        ) : items.length === 0 ? (
-          <NothingFound />
-        ) : (
-          items.map((item) => <Card key={item.nasaId} {...item} />)
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={className}>
+      {isLoading ? (
+        <Loader />
+      ) : items.length === 0 ? (
+        <NothingFound />
+      ) : (
+        items.map((item) => <Card key={item.nasaId} {...item} />)
+      )}
+    </div>
+  );
+};
 
 export default CardList;
