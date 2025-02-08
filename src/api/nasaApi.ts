@@ -1,3 +1,4 @@
+import { MAX_API_PAGE_NUMBER } from '../constants/constants';
 import { PaginationInfo, searchResultItem } from '../types/types';
 
 const API_KEY = 'dW64E3BgmZbrImMrdMSk0hzNIOdpOqtqEGvvz8Ud';
@@ -98,7 +99,11 @@ export async function searchImages(
     }
 
     const totalItems = data.collection.metadata.total_hits;
-    const totalPages = Math.ceil(totalItems / pageSize);
+    const calcTotalPages = Math.ceil(totalItems / pageSize);
+    const totalPages =
+      calcTotalPages > MAX_API_PAGE_NUMBER
+        ? MAX_API_PAGE_NUMBER
+        : calcTotalPages;
 
     return {
       items: data.collection.items.map(mapNasaCollectionItemToSearchResultItem),

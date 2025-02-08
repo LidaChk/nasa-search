@@ -1,7 +1,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -11,7 +11,7 @@
 .app-header {
   position: sticky;
   top: 0;
-  background-color: var(--background-color);
+  background-color: transparent;
   padding: 1rem 0;
   z-index: 10;
 }
@@ -46,7 +46,7 @@
 .app-footer {
   position: sticky;
   bottom: 0;
-  background-color: var(--background-color);
+  background-color: transparent;
   padding: 1rem 0;
   z-index: 10;
 }

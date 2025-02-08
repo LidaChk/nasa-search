@@ -25,18 +25,29 @@
   text-align: center;
 }
 
-input[type='text'] {
+input[type='number'] {
   font-family: var(--font-family);
   font-weight: 400;
   font-size: 1rem;
   color: var(--primary-act-color);
   background-color: transparent;
   border: 2px solid var(--primary-act-color);
-  padding: 10px;
-  width: 2em;
+  padding: 0.7em;
+  width: 3em;
+  text-align: center;
   transition: border-color 0.3s ease;
 }
 
-input[type='text']:focus {
+input[type='number']:focus {
   outline: none;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
 }

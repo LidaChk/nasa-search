@@ -1,5 +1,5 @@
 import './App.css';
-
+import React, { useCallback, useEffect, useState } from 'react';
 import ErrorBoundary from './components/errorBoundary/errorBoundary';
 import Search from './components/search/search';
 import { LS_KEY_SEARCH_TERM } from './constants/constants';
@@ -8,11 +8,11 @@ import { searchImages } from './api/nasaApi';
 import CardList from './components/cardList/cardList';
 import ErrorCatchWrapper from './components/errorCatchWrapper/errorCatchWrapper';
 import Pagination from './components/pagination/pagination';
-import React, { useCallback, useEffect, useState, useTransition } from 'react';
 
 const App: React.FC = () => {
   const [items, setItems] = useState<searchResultItem[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState(
     localStorage.getItem(LS_KEY_SEARCH_TERM) || ''
   );
@@ -22,39 +22,32 @@ const App: React.FC = () => {
     pageSize: 10,
   });
 
-  const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const page = parseInt(params.get('page') || '1', 10);
-    setPagination((prev) => ({ ...prev, currentPage: page }));
-  }, []);
-
   const fetchImages = useCallback(
-    async (searchTerm: string, page: number) => {
+    async (searchTerm: string) => {
       try {
+        setIsLoading(true);
         setError(null);
 
         const response = await searchImages({
           query: searchTerm,
-          page,
+          page: pagination.currentPage,
           pageSize: pagination.pageSize,
         });
 
-        startTransition(() => {
-          setItems(response.items);
-          setPagination(response.pagination);
-        });
+        setItems(response.items);
+        setPagination(response.pagination);
       } catch (error) {
         setError(error instanceof Error ? error.message : 'An error occurred');
+      } finally {
+        setIsLoading(false);
       }
     },
-    [pagination.pageSize, startTransition]
+    [pagination.pageSize, pagination.currentPage]
   );
 
   useEffect(() => {
-    fetchImages(searchTerm, pagination.currentPage);
-  }, [searchTerm, pagination.currentPage, fetchImages]);
+    fetchImages(searchTerm);
+  }, [searchTerm, pagination.currentPage, pagination.pageSize, fetchImages]);
 
   const onSearch = (newSearchTerm: string) => {
     localStorage.setItem(LS_KEY_SEARCH_TERM, newSearchTerm);
@@ -62,9 +55,12 @@ const App: React.FC = () => {
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
   };
 
-  const handlePageChange = (page: number) => {
-    setPagination((prev) => ({ ...prev, currentPage: page }));
-  };
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setPagination((prev) => ({ ...prev, currentPage: page }));
+    },
+    [setPagination]
+  );
 
   return (
     <ErrorBoundary>
@@ -74,9 +70,9 @@ const App: React.FC = () => {
       </div>
       <ErrorCatchWrapper error={error}>
         <div className="app-content">
-          <CardList items={items} isLoading={isPending} />
+          <CardList items={items} isLoading={isLoading} />
         </div>
-        {items.length > 0 && !isPending && (
+        {items.length > 0 && !isLoading && pagination.totalPages > 1 && (
           <div className="app-footer">
             <Pagination {...pagination} onPageChange={handlePageChange} />
           </div>
