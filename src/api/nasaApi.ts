@@ -1,4 +1,4 @@
-import { searchResultItem } from '../types/types';
+import { PaginationInfo, searchResultItem } from '../types/types';
 
 const API_KEY = 'dW64E3BgmZbrImMrdMSk0hzNIOdpOqtqEGvvz8Ud';
 const BASE_URL = 'https://images-api.nasa.gov/search';
@@ -30,9 +30,13 @@ export interface nasaCollectionItem {
   data: NasaImageData[];
   links: ImageLink[];
 }
+
 export interface NasaApiResponse {
   collection: {
     items: nasaCollectionItem[];
+    metadata: {
+      total_hits: number;
+    };
   };
 }
 
@@ -60,7 +64,7 @@ function mapNasaCollectionItemToSearchResultItem(
 
 export async function searchImages(
   params: SearchParams
-): Promise<searchResultItem[]> {
+): Promise<{ items: searchResultItem[]; pagination: PaginationInfo }> {
   const { query, page = 1, pageSize = 10 } = params;
 
   const url = new URL(BASE_URL);
@@ -93,7 +97,17 @@ export async function searchImages(
       throw new Error('Invalid response format from NASA API');
     }
 
-    return data.collection.items.map(mapNasaCollectionItemToSearchResultItem);
+    const totalItems = data.collection.metadata.total_hits;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    return {
+      items: data.collection.items.map(mapNasaCollectionItemToSearchResultItem),
+      pagination: {
+        currentPage: page,
+        totalPages,
+        pageSize,
+      },
+    };
   } catch (error) {
     console.error('Error searching NASA images:', error);
     throw error;

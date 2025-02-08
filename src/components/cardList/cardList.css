@@ -5,9 +5,11 @@
   align-items: center;
   gap: 2rem;
   padding: 2rem 0;
-  flex: 1;
 }
 
 .card-list__loader {
   justify-content: center;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }

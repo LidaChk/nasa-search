@@ -3,11 +3,12 @@ import './App.css';
 import ErrorBoundary from './components/errorBoundary/errorBoundary';
 import Search from './components/search/search';
 import { LS_KEY_SEARCH_TERM } from './constants/constants';
-import { searchResultItem } from './types/types';
+import { PaginationInfo, searchResultItem } from './types/types';
 import { searchImages } from './api/nasaApi';
 import CardList from './components/cardList/cardList';
 import ErrorCatchWrapper from './components/errorCatchWrapper/errorCatchWrapper';
-import React, { useEffect, useState, useTransition } from 'react';
+import Pagination from './components/pagination/pagination';
+import React, { useCallback, useEffect, useState, useTransition } from 'react';
 
 const App: React.FC = () => {
   const [items, setItems] = useState<searchResultItem[]>([]);
@@ -15,40 +16,71 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState(
     localStorage.getItem(LS_KEY_SEARCH_TERM) || ''
   );
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    currentPage: 1,
+    totalPages: 1,
+    pageSize: 10,
+  });
 
   const [isPending, startTransition] = useTransition();
 
-  const fetchImages = async (searchTerm: string) => {
-    try {
-      setError(null);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const page = parseInt(params.get('page') || '1', 10);
+    setPagination((prev) => ({ ...prev, currentPage: page }));
+  }, []);
 
-      const response = await searchImages({ query: searchTerm });
+  const fetchImages = useCallback(
+    async (searchTerm: string, page: number) => {
+      try {
+        setError(null);
 
-      startTransition(() => {
-        setItems(response);
-      });
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred');
-    }
-  };
+        const response = await searchImages({
+          query: searchTerm,
+          page,
+          pageSize: pagination.pageSize,
+        });
+
+        startTransition(() => {
+          setItems(response.items);
+          setPagination(response.pagination);
+        });
+      } catch (error) {
+        setError(error instanceof Error ? error.message : 'An error occurred');
+      }
+    },
+    [pagination.pageSize, startTransition]
+  );
 
   useEffect(() => {
-    fetchImages(searchTerm);
-  }, [searchTerm]);
+    fetchImages(searchTerm, pagination.currentPage);
+  }, [searchTerm, pagination.currentPage, fetchImages]);
 
   const onSearch = (newSearchTerm: string) => {
     localStorage.setItem(LS_KEY_SEARCH_TERM, newSearchTerm);
     setSearchTerm(newSearchTerm);
-    fetchImages(newSearchTerm);
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  };
+
+  const handlePageChange = (page: number) => {
+    setPagination((prev) => ({ ...prev, currentPage: page }));
   };
 
   return (
     <ErrorBoundary>
-      <h1>NASA Image search</h1>
-      <ErrorCatchWrapper error={error}>
+      <div className="app-header">
+        <h1>NASA Image search</h1>
         <Search onSearch={onSearch} initialSearchTerm={searchTerm} />
-        <CardList items={items} isLoading={isPending} />
-        <div className="app"></div>
+      </div>
+      <ErrorCatchWrapper error={error}>
+        <div className="app-content">
+          <CardList items={items} isLoading={isPending} />
+        </div>
+        {items.length > 0 && !isPending && (
+          <div className="app-footer">
+            <Pagination {...pagination} onPageChange={handlePageChange} />
+          </div>
+        )}
       </ErrorCatchWrapper>
     </ErrorBoundary>
   );
