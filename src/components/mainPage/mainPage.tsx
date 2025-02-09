@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router';
 import CardList from '../cardList/cardList';
 import './mainPage.css';
-import Search from '../search/Search';
+import Search from '../search/search';
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate();
