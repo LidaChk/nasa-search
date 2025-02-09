@@ -1,3 +1,4 @@
 npm run format:fix
 npm run lint:fix
+npm run test:coverage
 git add .
