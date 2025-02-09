@@ -1,8 +1,8 @@
 import React from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router';
-import Search from '../search/search';
 import CardList from '../cardList/cardList';
 import './mainPage.css';
+import Search from '../search/Search';
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate();

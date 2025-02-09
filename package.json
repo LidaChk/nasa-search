@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "prepare": "husky",
     "test": "jest",
-    "coverage": "jest --coverage"
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "react": "^19.0.0",
