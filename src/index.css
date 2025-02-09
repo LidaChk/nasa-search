@@ -77,6 +77,11 @@ strong {
   color: var(--accent-color);
 }
 
+.accent {
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
 button {
   font-family: var(--h-font-family);
   font-weight: 700;
