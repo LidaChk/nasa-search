@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './search.css';
 import { useNavigate, useParams } from 'react-router';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { LS_KEY_SEARCH_TERM } from '../../constants/constants';
+import { EMPTY_SEARCH, LS_KEY_SEARCH_TERM } from '../../constants/constants';
 
 const Search: React.FC = () => {
   const { searchTerm = '' } = useParams<{
@@ -28,7 +28,7 @@ const Search: React.FC = () => {
     if (trimmedSearchTerm !== searchTermLS) {
       setSearchTermLS(trimmedSearchTerm);
     }
-    navigate(`/search/${trimmedSearchTerm}/1`);
+    navigate(`/search/${trimmedSearchTerm || EMPTY_SEARCH}/1`);
   };
 
   return (
@@ -37,7 +37,7 @@ const Search: React.FC = () => {
         type="search"
         className="search-input"
         placeholder="Search..."
-        value={inputValue}
+        value={inputValue === EMPTY_SEARCH ? '' : inputValue}
         onChange={handleInputChange}
       />
       <button className="search-button">Search</button>

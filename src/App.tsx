@@ -3,7 +3,7 @@ import ErrorBoundary from './components/errorBoundary/errorBoundary';
 import './App.css';
 import MainPage from './components/mainPage/mainPage';
 import { Navigate, Route, Routes } from 'react-router';
-import { LS_KEY_SEARCH_TERM } from './constants/constants';
+import { EMPTY_SEARCH, LS_KEY_SEARCH_TERM } from './constants/constants';
 import useLocalStorage from './hooks/useLocalStorage';
 import DetailCard from './components/detailCard/detailCard';
 import NothingFound from './components/nothingFound/nothingFound';
@@ -20,7 +20,7 @@ const App: React.FC = () => {
           path="/"
           element={
             <Navigate
-              to={`/search/${searchTermFromLS}/${DEFAULT_PAGE}`}
+              to={`/search/${searchTermFromLS || EMPTY_SEARCH}/${DEFAULT_PAGE}`}
               replace
             />
           }

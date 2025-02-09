@@ -4,7 +4,7 @@ import NothingFound from '../nothingFound/nothingFound';
 import Pagination from '../pagination/pagination';
 import { searchImages } from '../../api/nasaApi';
 import { PaginationInfo, SearchResultItem } from '../../types/types';
-import { PAGE_SIZE } from '../../constants/constants';
+import { EMPTY_SEARCH, PAGE_SIZE } from '../../constants/constants';
 import Card from '../card/card';
 import { useParams } from 'react-router';
 
@@ -28,14 +28,12 @@ const CardList: React.FC = () => {
 
   useEffect(() => {
     const fetchImages = async () => {
-      if (!searchTerm) return;
-
       try {
         setIsLoading(true);
         setError(null);
 
         const response = await searchImages({
-          query: searchTerm,
+          query: searchTerm === EMPTY_SEARCH ? '' : searchTerm,
           page: parseInt(currentPage, 10),
           pageSize: pagination.pageSize,
         });
