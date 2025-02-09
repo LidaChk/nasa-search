@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MainPage Component renders correctly with nasaId 1`] = `
+<div>
+  <div
+    class="main-page-container main-page-container__detail"
+  >
+    <div
+      class="app-header app-header__detail"
+    >
+      <h1>
+        NASA Image search
+      </h1>
+      <div
+        data-testid="search"
+      >
+        Search Component
+      </div>
+    </div>
+    <div
+      class="main-page main-page__detail"
+    >
+      <div
+        data-testid="card-list"
+      >
+        CardList Component
+      </div>
+    </div>
+    <div
+      class="details-section"
+    />
+  </div>
+</div>
+`;
+
+exports[`MainPage Component renders correctly without nasaId 1`] = `
+<div>
+  <div
+    class="main-page-container "
+  >
+    <div
+      class="app-header "
+    >
+      <h1>
+        NASA Image search
+      </h1>
+      <div
+        data-testid="search"
+      >
+        Search Component
+      </div>
+    </div>
+    <div
+      class="main-page "
+    >
+      <div
+        data-testid="card-list"
+      >
+        CardList Component
+      </div>
+    </div>
+  </div>
+</div>
+`;

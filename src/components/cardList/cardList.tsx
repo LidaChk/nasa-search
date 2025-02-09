@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Loader from '../loader/loader';
 import NothingFound from '../nothingFound/nothingFound';
 import Pagination from '../pagination/pagination';

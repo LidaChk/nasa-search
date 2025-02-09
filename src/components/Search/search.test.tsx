@@ -99,7 +99,7 @@ describe('Search', () => {
       fireEvent.change(searchInput, { target: { value: '' } });
       fireEvent.submit(form);
 
-      expect(mockNavigate).toHaveBeenCalledWith('/search//1');
+      expect(mockNavigate).toHaveBeenCalledWith('/search/_empty/1');
     });
 
     it('does not update localStorage if search term has not changed', () => {

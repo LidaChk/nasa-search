@@ -24,7 +24,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
 
   const numCurrentPage = parseInt(currentPage, 10);
   return (
-    <div className="pagination">
+    <div className="pagination" data-testid="pagination">
       <button
         className="pagination__button"
         onClick={() => onPageChange(numCurrentPage - 1)}
