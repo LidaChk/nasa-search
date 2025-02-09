@@ -8,7 +8,6 @@ module.exports = {
     '!src/setupTests.ts',
     '!src/reportWebVitals.ts',
     '!src/index.tsx',
-    '!src/App.tsx'
   ],
   coverageDirectory: 'coverage',
   preset: 'ts-jest',

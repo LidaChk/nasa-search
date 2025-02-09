@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorBoundary matches error state snapshot 1`] = `
+<div>
+  <div
+    class="error-boundary error-container"
+  >
+    <div
+      aria-hidden="true"
+      class="error-emoji strong"
+      role="img"
+    >
+      (^-^*)
+    </div>
+    <div>
+      Something went wrong
+    </div>
+    <div
+      class="error-message"
+    >
+      Test error
+    </div>
+    <button>
+      Try Again
+    </button>
+  </div>
+</div>
+`;
