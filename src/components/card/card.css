@@ -15,8 +15,13 @@
     box-shadow 0.3s ease;
 }
 
-.card:hover {
-  transform: translateY(-5px);
+.card:hover,
+.card:active {
+  transform: translateY(-0.5rem);
+}
+
+.card.active .card__title {
+  color: var(--accent-color);
 }
 
 .card__image {
@@ -53,6 +58,10 @@
   text-align: left;
   color: var(--text-color);
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-act-color-transparent)
+    var(--scrollbar-track-color);
 }
 
 .card__description::-webkit-scrollbar {

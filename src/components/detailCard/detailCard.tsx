@@ -40,7 +40,9 @@ const DetailCard: React.FC = () => {
   }
 
   return (
-    <div className="detail-item detail-item--card">
+    <div
+      className={`detail-item ${isLoading ? 'detail-item--loader' : 'detail-item--card'}`}
+    >
       {isLoading ? (
         <Loader />
       ) : (

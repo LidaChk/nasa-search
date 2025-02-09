@@ -35,18 +35,7 @@
   border-left: 2px solid var(--primary-act-color);
   overflow-y: auto;
   position: relative;
-}
-
-@media (max-width: 768px) {
-  .details-section {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--background-color);
-    z-index: 100;
-  }
+  overflow: hidden;
 }
 
 .main-page-container__detail {
@@ -62,7 +51,7 @@
 }
 .main-page__detail {
   grid-column: 1;
-  grid-row: 1;
+  grid-row: 2;
 }
 .details-section {
   grid-row: 1 / span 2;

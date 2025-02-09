@@ -12,8 +12,8 @@ const MainPage: React.FC = () => {
     nasaId?: string;
   }>();
 
-  const handleContainerClick = (e: React.MouseEvent) => {
-    if (nasaId && !e.defaultPrevented) {
+  const handleContainerClick = () => {
+    if (nasaId) {
       navigate(`/search/${searchTerm}/${currentPage}`);
     }
   };

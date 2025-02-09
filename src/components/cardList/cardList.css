@@ -19,7 +19,7 @@
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   scrollbar-width: none;
   scrollbar-color: var(--primary-act-color-transparent)
     var(--scrollbar-track-color);
