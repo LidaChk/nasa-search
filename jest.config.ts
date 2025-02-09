@@ -1,7 +1,7 @@
 export {};
 module.exports = {
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts', '!**/vendor/**'],
+  collectCoverageFrom: ['src/**/*.{tsx}', '!src/**/*.d.ts', '!**/vendor/**'],
   coverageDirectory: 'coverage',
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
@@ -17,6 +17,9 @@ module.exports = {
     'reportWebVitals.ts',
     'setupTests.ts',
     'index.tsx',
+    '**/*.test.tsx',
+    '**/*.spec.tsx',
+    'src/__tests__/setup.ts',
   ],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   moduleNameMapper: {

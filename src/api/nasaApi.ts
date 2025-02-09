@@ -36,8 +36,8 @@ export interface NasaCollectionItem {
 export interface NasaApiResponse {
   collection: {
     items: NasaCollectionItem[];
-    metadata: {
-      total_hits: number;
+    metadata?: {
+      total_hits?: number;
     };
   };
 }
@@ -80,47 +80,39 @@ export async function searchImages(
   url.searchParams.set('page', page.toString());
   url.searchParams.set('page_size', pageSize.toString());
 
-  try {
-    const response = await fetch(url.toString(), {
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-      },
-    });
+  const response = await fetch(url.toString(), {
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
+    },
+  });
 
-    if (response.status === 404) {
-      throw new Error(`Resource not found (404): ${url.pathname}`);
-    }
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `NASA API error: ${response.status} ${response.statusText}\n${errorText}`
-      );
-    }
-
-    const data: NasaApiResponse = await response.json();
-
-    if (!data?.collection?.items) {
-      throw new Error('Invalid response format from NASA API');
-    }
-
-    const totalItems = data.collection.metadata.total_hits;
-    const calcTotalPages = Math.ceil(totalItems / pageSize);
-    const totalPages =
-      calcTotalPages > MAX_API_PAGE_NUMBER
-        ? MAX_API_PAGE_NUMBER
-        : calcTotalPages;
-
-    return {
-      items: data.collection.items.map(mapNasaCollectionItemToSearchResultItem),
-      pagination: {
-        currentPage: page,
-        totalPages,
-        pageSize,
-      },
-    };
-  } catch (error) {
-    console.error('Error searching NASA images:', error);
-    throw error;
+  if (response.status === 404) {
+    throw new Error(`Resource not found (404): ${url.pathname}`);
   }
+
+  if (!response.ok) {
+    throw new Error(
+      `NASA API error: ${response.status} ${response.statusText}`
+    );
+  }
+
+  const data: NasaApiResponse = await response.json();
+
+  if (!data?.collection?.items) {
+    throw new Error('Invalid response format from NASA API');
+  }
+
+  const totalItems = data.collection?.metadata?.total_hits || 0;
+  const calcTotalPages = Math.ceil(totalItems / pageSize);
+  const totalPages =
+    calcTotalPages > MAX_API_PAGE_NUMBER ? MAX_API_PAGE_NUMBER : calcTotalPages;
+
+  return {
+    items: data.collection.items.map(mapNasaCollectionItemToSearchResultItem),
+    pagination: {
+      currentPage: page,
+      totalPages,
+      pageSize,
+    },
+  };
 }
