@@ -62,7 +62,7 @@ const CardList: React.FC = () => {
     return <div>Error: {error}</div>;
   }
 
-  const className = `card-list${isLoading ? ' card-list__loader' : ''}`;
+  const className = `card-list ${isLoading ? 'card-list__loader' : 'card-list__scrolled'}`;
 
   return (
     <>
@@ -76,7 +76,7 @@ const CardList: React.FC = () => {
         )}
       </div>
       {items.length > 0 && !isLoading && pagination.totalPages > 1 && (
-        <div className="app-footer">
+        <div className="pagination-container">
           <Pagination totalPages={pagination.totalPages} />
         </div>
       )}

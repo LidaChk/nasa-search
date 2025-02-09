@@ -13,3 +13,38 @@
   display: flex;
   align-items: center;
 }
+
+.card-list__scrolled {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-act-color-transparent)
+    var(--scrollbar-track-color);
+}
+
+.card-list__scrolled::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.card-list__scrolled::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-color);
+}
+
+.card-list__scrolled::-webkit-scrollbar-thumb {
+  background: var(--primary-act-color-transparent);
+  transition: background-color 0.3s ease;
+}
+
+.card-list__scrolled::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-act-color);
+  cursor: pointer;
+}
+
+.pagination-container {
+  position: sticky;
+  bottom: 0;
+  background-color: transparent;
+  padding: 1rem 0;
+  z-index: 10;
+}
