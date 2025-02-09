@@ -6,6 +6,7 @@ import { searchImages } from '../../api/nasaApi';
 import { PaginationInfo, SearchResultItem } from '../../types/types';
 import { PAGE_SIZE } from '../../constants/constants';
 import Card from '../card/card';
+import { useParams } from 'react-router';
 
 import './cardList.css';
 
