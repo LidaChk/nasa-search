@@ -1,5 +1,6 @@
 import React from 'react';
 import './card.css';
+import { NavLink, useParams } from 'react-router';
 
 interface CardProps {
   nasaId: string;
@@ -9,8 +10,14 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ nasaId, title, description, preview }) => {
+  const { searchTerm, currentPage } = useParams();
+
   return (
-    <div className="card" key={nasaId}>
+    <NavLink
+      to={`/${searchTerm}/${currentPage}/details/${nasaId}`}
+      className="card"
+      key={nasaId}
+    >
       <div className="card__image-container">
         <img src={preview.href} alt={title} className="card__image" />
       </div>
@@ -21,7 +28,7 @@ const Card: React.FC<CardProps> = ({ nasaId, title, description, preview }) => {
           dangerouslySetInnerHTML={{ __html: description }}
         ></p>
       </div>
-    </div>
+    </NavLink>
   );
 };
 

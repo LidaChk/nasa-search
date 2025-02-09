@@ -1,13 +1,19 @@
 import React from 'react';
 import './nothingFound.css';
 
-const NothingFound: React.FC = () => {
+interface NothingFoundProp {
+  message?: string;
+}
+
+const NothingFound: React.FC<NothingFoundProp> = ({
+  message = 'Nothing was found',
+}) => {
   return (
     <div className="error-container error-container__nothing">
       <div role="img" aria-hidden="true" className="error-emoji strong">
         (^-^*)
       </div>
-      <div>Nothing was found</div>
+      <div>{message}</div>
     </div>
   );
 };

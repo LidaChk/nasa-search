@@ -11,9 +11,14 @@ interface PaginationProps {
 const defaultInputWidth = 3;
 
 const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
-  const { searchTerm = '', currentPage = '1' } = useParams<{
+  const {
+    searchTerm = '',
+    currentPage = '1',
+    nasaId,
+  } = useParams<{
     searchTerm: string;
     currentPage: string;
+    nasaId?: string;
   }>();
 
   const navigate = useNavigate();
@@ -26,15 +31,18 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
 
   const onPageChange = useCallback(
     (page: number) => {
-      navigate(`/${searchTerm}/${page}`);
+      navigate(`/${searchTerm}/${page}${nasaId ? `/details/${nasaId}` : ''}`);
     },
-    [navigate, searchTerm]
+    [navigate, searchTerm, nasaId]
   );
 
   useEffect(() => {
+    if (!debouncedInputValue || debouncedInputValue === currentPage) {
+      return;
+    }
     const numValue = parseInt(debouncedInputValue, 10);
     onPageChange(numValue);
-  }, [debouncedInputValue, onPageChange, totalPages]);
+  }, [debouncedInputValue, onPageChange, currentPage]);
 
   useEffect(() => {
     setInputValue(currentPage.toString());

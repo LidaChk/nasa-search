@@ -4,7 +4,6 @@ import NothingFound from '../nothingFound/nothingFound';
 import Pagination from '../pagination/pagination';
 import { searchImages } from '../../api/nasaApi';
 import { PaginationInfo, SearchResultItem } from '../../types/types';
-import { useParams } from 'react-router';
 import { PAGE_SIZE } from '../../constants/constants';
 import Card from '../card/card';
 
@@ -14,6 +13,7 @@ const CardList: React.FC = () => {
   const { searchTerm = '', currentPage = '1' } = useParams<{
     searchTerm: string;
     currentPage: string;
+    nasaId?: string;
   }>();
 
   const [items, setItems] = useState<SearchResultItem[]>([]);
@@ -57,6 +57,12 @@ const CardList: React.FC = () => {
       fetchImages(searchTerm);
     }
   }, [searchTerm, currentPage, fetchImages]);
+
+  /*   const handleContainerClick = (e: React.MouseEvent) => {
+    if (nasaId && !e.defaultPrevented) {
+      navigate(`/${searchTerm}/${currentPage}`);
+    }
+  }; */
 
   if (error) {
     return <div>Error: {error}</div>;

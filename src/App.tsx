@@ -5,6 +5,8 @@ import MainPage from './components/mainPage/mainPage';
 import { Navigate, Route, Routes } from 'react-router';
 import { LS_KEY_SEARCH_TERM } from './constants/constants';
 import useLocalStorage from './hooks/useLocalStorage';
+import DetailCard from './components/detailCard/detailCard';
+import NothingFound from './components/nothingFound/nothingFound';
 
 const DEFAULT_PAGE = '1';
 
@@ -20,7 +22,10 @@ const App: React.FC = () => {
             <Navigate to={`/${searchTermFromLS}/${DEFAULT_PAGE}`} replace />
           }
         />
-        <Route path="/:searchTerm/:currentPage" element={<MainPage />} />
+        <Route path="/:searchTerm/:currentPage" element={<MainPage />}>
+          <Route path="details/:nasaId" element={<DetailCard />} />
+        </Route>
+        <Route path="*" element={<NothingFound message="404" />} />
       </Routes>
     </ErrorBoundary>
   );

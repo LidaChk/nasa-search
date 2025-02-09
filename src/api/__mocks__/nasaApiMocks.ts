@@ -20,6 +20,9 @@ export const mockResponseData = (status: number, data?: NasaApiResponse) => ({
 
 export const mockNASAData: NasaApiResponse = {
   collection: {
+    metadata: {
+      total_hits: 1000,
+    },
     items: [
       {
         data: [

@@ -1,11 +1,12 @@
-import { MAX_API_PAGE_NUMBER } from '../constants/constants';
+import { MAX_API_PAGE_NUMBER, PAGE_SIZE } from '../constants/constants';
 import { PaginationInfo, SearchResultItem } from '../types/types';
 
 const API_KEY = 'dW64E3BgmZbrImMrdMSk0hzNIOdpOqtqEGvvz8Ud';
 const BASE_URL = 'https://images-api.nasa.gov/search';
 
 interface SearchParams {
-  query: string;
+  query?: string;
+  nasaId?: string;
   page?: number;
   pageSize?: number;
 }
@@ -66,10 +67,15 @@ function mapNasaCollectionItemToSearchResultItem(
 export async function searchImages(
   params: SearchParams
 ): Promise<{ items: SearchResultItem[]; pagination: PaginationInfo }> {
-  const { query, page = 1, pageSize = 10 } = params;
+  const { query, nasaId, page = 1, pageSize = PAGE_SIZE } = params;
 
   const url = new URL(BASE_URL);
-  url.searchParams.set('q', query);
+  if (query) {
+    url.searchParams.set('q', query);
+  }
+  if (nasaId) {
+    url.searchParams.set('nasa_id', nasaId);
+  }
   url.searchParams.set('media_type', 'image');
   url.searchParams.set('page', page.toString());
   url.searchParams.set('page_size', pageSize.toString());
