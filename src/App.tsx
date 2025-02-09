@@ -4,11 +4,12 @@ import './App.css';
 import MainPage from './components/mainPage/mainPage';
 import { Navigate, Route, Routes } from 'react-router';
 import { LS_KEY_SEARCH_TERM } from './constants/constants';
+import useLocalStorage from './hooks/useLocalStorage';
 
 const DEFAULT_PAGE = '1';
 
 const App: React.FC = () => {
-  const searchTermFromLS = localStorage.getItem(LS_KEY_SEARCH_TERM) || '';
+  const [searchTermFromLS] = useLocalStorage(LS_KEY_SEARCH_TERM, '');
 
   return (
     <ErrorBoundary>

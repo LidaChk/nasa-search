@@ -1,22 +1,34 @@
 import React, { useState } from 'react';
 import './search.css';
+import { useNavigate, useParams } from 'react-router';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import { LS_KEY_SEARCH_TERM } from '../../constants/constants';
 
-interface SearchProps {
-  onSearch: (searchTerm: string) => void;
-  initialSearchTerm: string;
-}
+const Search: React.FC = () => {
+  const { searchTerm = '' } = useParams<{
+    searchTerm: string;
+  }>();
 
-const Search: React.FC<SearchProps> = ({ onSearch, initialSearchTerm }) => {
-  const [searchTerm, setSearchTerm] = useState<string>(initialSearchTerm);
+  const [searchTermLS, setSearchTermLS] = useLocalStorage(
+    LS_KEY_SEARCH_TERM,
+    ''
+  );
+
+  const [inputValue, setInputValue] = useState(searchTerm);
+
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    setInputValue(e.target.value);
   };
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const trimmedSearchTerm = searchTerm.trim();
-    onSearch(trimmedSearchTerm);
+    const trimmedSearchTerm = inputValue.trim();
+    if (trimmedSearchTerm !== searchTermLS) {
+      setSearchTermLS(trimmedSearchTerm);
+    }
+    navigate(`/${trimmedSearchTerm}/1`);
   };
 
   return (
@@ -25,7 +37,7 @@ const Search: React.FC<SearchProps> = ({ onSearch, initialSearchTerm }) => {
         type="search"
         className="search-input"
         placeholder="Search..."
-        value={searchTerm}
+        value={inputValue}
         onChange={handleInputChange}
       />
       <button className="search-button">Search</button>
