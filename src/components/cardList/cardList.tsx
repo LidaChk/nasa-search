@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from '../loader/loader';
 import NothingFound from '../nothingFound/nothingFound';
 import Pagination from '../pagination/pagination';
@@ -26,15 +26,17 @@ const CardList: React.FC = () => {
     pageSize: 10,
   });
 
-  const fetchImages = useCallback(
-    async (term: string) => {
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (!searchTerm) return;
+
       try {
         setIsLoading(true);
         setError(null);
 
         const response = await searchImages({
-          query: term,
-          page: pagination.currentPage,
+          query: searchTerm,
+          page: parseInt(currentPage, 10),
           pageSize: pagination.pageSize,
         });
 
@@ -45,25 +47,15 @@ const CardList: React.FC = () => {
       } finally {
         setIsLoading(false);
       }
-    },
-    [pagination.currentPage, pagination.pageSize]
-  );
+    };
 
-  useEffect(() => {
-    if (searchTerm) {
-      setPagination((prev) => ({
-        ...prev,
-        currentPage: parseInt(currentPage, 10),
-      }));
-      fetchImages(searchTerm);
-    }
-  }, [searchTerm, currentPage, fetchImages]);
+    setPagination((prev) => ({
+      ...prev,
+      currentPage: parseInt(currentPage, 10),
+    }));
 
-  /*   const handleContainerClick = (e: React.MouseEvent) => {
-    if (nasaId && !e.defaultPrevented) {
-      navigate(`/${searchTerm}/${currentPage}`);
-    }
-  }; */
+    fetchImages();
+  }, [searchTerm, currentPage, pagination.pageSize]);
 
   if (error) {
     return <div>Error: {error}</div>;

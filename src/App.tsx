@@ -19,10 +19,13 @@ const App: React.FC = () => {
         <Route
           path="/"
           element={
-            <Navigate to={`/${searchTermFromLS}/${DEFAULT_PAGE}`} replace />
+            <Navigate
+              to={`/search/${searchTermFromLS}/${DEFAULT_PAGE}`}
+              replace
+            />
           }
         />
-        <Route path="/:searchTerm/:currentPage" element={<MainPage />}>
+        <Route path="search/:searchTerm/:currentPage" element={<MainPage />}>
           <Route path="details/:nasaId" element={<DetailCard />} />
         </Route>
         <Route path="*" element={<NothingFound message="404" />} />

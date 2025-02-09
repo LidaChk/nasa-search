@@ -28,7 +28,7 @@ const Search: React.FC = () => {
     if (trimmedSearchTerm !== searchTermLS) {
       setSearchTermLS(trimmedSearchTerm);
     }
-    navigate(`/${trimmedSearchTerm}/1`);
+    navigate(`/search/${trimmedSearchTerm}/1`);
   };
 
   return (

@@ -14,7 +14,7 @@ const Card: React.FC<CardProps> = ({ nasaId, title, description, preview }) => {
 
   return (
     <NavLink
-      to={`/${searchTerm}/${currentPage}/details/${nasaId}`}
+      to={`/search/${searchTerm}/${currentPage}/details/${nasaId}`}
       className="card"
       key={nasaId}
     >

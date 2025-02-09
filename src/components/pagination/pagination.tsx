@@ -17,7 +17,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
 
   const onPageChange = useCallback(
     (page: number) => {
-      navigate(`/${searchTerm}/${page}`);
+      navigate(`/search/${searchTerm}/${page}`);
     },
     [navigate, searchTerm]
   );

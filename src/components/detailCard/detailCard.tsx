@@ -78,7 +78,10 @@ const DetailCard: React.FC = () => {
                 </p>
               </div>
             </div>
-            <Link to={`/${searchTerm}/${currentPage}`} className="close-button">
+            <Link
+              to={`/search/${searchTerm}/${currentPage}`}
+              className="close-button"
+            >
               <h3>x</h3>
             </Link>
           </>
