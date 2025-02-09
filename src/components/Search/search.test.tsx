@@ -118,4 +118,10 @@ describe('Search', () => {
       expect(mockNavigate).toHaveBeenCalledWith('/search/existing search/1');
     });
   });
+  afterAll(() => {
+    const _dummyComponent: React.FC = () => {
+      return <div>dummy</div>;
+    };
+    render(<_dummyComponent />);
+  });
 });

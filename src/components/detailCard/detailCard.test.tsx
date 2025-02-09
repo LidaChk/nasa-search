@@ -122,4 +122,10 @@ describe('DetailCard Component', () => {
     const closeLink = closeButton.closest('a');
     expect(closeLink).toHaveAttribute('href', '/search/moon/1');
   });
+  afterAll(() => {
+    const _dummyComponent: React.FC = () => {
+      return <div>dummy</div>;
+    };
+    render(<_dummyComponent />);
+  });
 });

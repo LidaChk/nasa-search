@@ -165,4 +165,11 @@ describe('Pagination', () => {
       expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
+
+  afterAll(() => {
+    const _dummyComponent: React.FC = () => {
+      return <div>dummy</div>;
+    };
+    render(<_dummyComponent />);
+  });
 });

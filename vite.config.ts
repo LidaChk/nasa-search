@@ -1,10 +1,26 @@
 import { defineConfig, UserConfig, ConfigEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import { execSync } from 'child_process';
+
+function getCurrentBranch() {
+  try {
+    // Get the current branch name using git command
+    const branchName = execSync('git rev-parse --abbrev-ref HEAD')
+      .toString()
+      .trim();
+    return branchName;
+  } catch (error) {
+    console.error('Error retrieving Git branch name:', error);
+    return 'default'; // Fallback branch name
+  }
+}
 
 export default defineConfig(({ command }: ConfigEnv): UserConfig => {
   const base: string =
-    command === 'serve' ? '/' : '/react-rsschool-2025-deploy/class-components/';
+    command === 'serve'
+      ? '/'
+      : `/react-rsschool-2025-deploy/${getCurrentBranch()}/`;
 
   return {
     base,

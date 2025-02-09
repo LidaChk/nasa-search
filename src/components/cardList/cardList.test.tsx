@@ -37,6 +37,13 @@ const mapMockDataToResponse = (
   },
 });
 describe('CardList', () => {
+  afterAll(() => {
+    const _dummyComponent: React.FC = () => {
+      return <div>dummy</div>;
+    };
+    render(<_dummyComponent />);
+  });
+
   const renderWithRouter = (searchTerm = EMPTY_SEARCH, page = '1') => {
     render(
       <MemoryRouter initialEntries={[`/search/${searchTerm}/${page}`]}>

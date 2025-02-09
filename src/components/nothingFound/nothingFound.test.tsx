@@ -17,4 +17,10 @@ describe('NothingFound Component', () => {
     render(<NothingFound message={customMessage} />);
     expect(screen.getByText(customMessage)).toBeInTheDocument();
   });
+  afterAll(() => {
+    const _dummyComponent: React.FC = () => {
+      return <div>dummy</div>;
+    };
+    render(<_dummyComponent />);
+  });
 });

@@ -27,6 +27,11 @@ export default tseslint.config(
       'react-compiler': reactCompiler,
     },
     rules: {
+      'no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      'react/prop-types': 'off',
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
@@ -35,7 +40,6 @@ export default tseslint.config(
       'react-compiler/react-compiler': 'error',
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
-      'no-unused-vars': 'warn',
     },
     settings: {
       react: {

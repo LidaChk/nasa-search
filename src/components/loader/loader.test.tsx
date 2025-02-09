@@ -24,4 +24,10 @@ describe('Loader', () => {
     const { container } = render(<Loader />);
     expect(container.firstChild).toMatchSnapshot();
   });
+  afterAll(() => {
+    const _dummyComponent: React.FC = () => {
+      return <div>dummy</div>;
+    };
+    render(<_dummyComponent />);
+  });
 });
