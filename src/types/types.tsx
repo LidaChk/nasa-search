@@ -1,4 +1,4 @@
-export interface searchResultItem {
+export interface SearchResultItem {
   nasaId: string;
   title: string;
   description: string;

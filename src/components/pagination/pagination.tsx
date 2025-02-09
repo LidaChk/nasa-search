@@ -8,6 +8,8 @@ interface PaginationProps {
   totalPages: number;
 }
 
+const defaultInputWidth = 3;
+
 const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
   const { searchTerm = '', currentPage = '1' } = useParams<{
     searchTerm: string;
@@ -30,7 +32,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
   );
 
   useEffect(() => {
-    const numValue = parseInt(debouncedInputValue);
+    const numValue = parseInt(debouncedInputValue, 10);
     onPageChange(numValue);
   }, [debouncedInputValue, onPageChange, totalPages]);
 
@@ -41,16 +43,18 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    const numValue = parseInt(value);
+    const numValue = parseInt(value, 10);
     if (!isNaN(numValue) && numValue > 0 && numValue <= totalPages) {
       setInputWidth(value.length);
       setInputValue(value);
     }
   };
 
-  const inputStyle = { width: `${inputWidth < 1 ? 3 : inputWidth + 2}em` };
+  const inputStyle = {
+    width: `${inputWidth < 1 ? defaultInputWidth : inputWidth + 2}em`,
+  };
 
-  const numCurrentPage = parseInt(currentPage);
+  const numCurrentPage = parseInt(currentPage, 10);
   return (
     <div className="pagination">
       <button
@@ -61,7 +65,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
         Previous
       </button>
       <span className="pagination__info">
-        Page&nbsp;
+        Page{' '}
         <input
           type="number"
           value={inputValue}
@@ -69,8 +73,8 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
           style={inputStyle}
           min={1}
           max={totalPages}
-        />
-        &nbsp;of {totalPages}
+        />{' '}
+        of {totalPages}
       </span>
       <button
         className="pagination__button"

@@ -18,13 +18,13 @@
   flex: 1;
   overflow-y: auto;
   min-height: 0;
-  scrollbar-width: thin;
+  scrollbar-width: none;
   scrollbar-color: var(--primary-act-color-transparent)
     var(--scrollbar-track-color);
 }
 
 .card-list__scrolled::-webkit-scrollbar {
-  width: 0.5rem;
+  width: 0;
 }
 
 .card-list__scrolled::-webkit-scrollbar-track {

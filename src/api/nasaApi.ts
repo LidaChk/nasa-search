@@ -1,5 +1,5 @@
 import { MAX_API_PAGE_NUMBER } from '../constants/constants';
-import { PaginationInfo, searchResultItem } from '../types/types';
+import { PaginationInfo, SearchResultItem } from '../types/types';
 
 const API_KEY = 'dW64E3BgmZbrImMrdMSk0hzNIOdpOqtqEGvvz8Ud';
 const BASE_URL = 'https://images-api.nasa.gov/search';
@@ -27,14 +27,14 @@ interface ImageLink {
   size?: string;
 }
 
-export interface nasaCollectionItem {
+export interface NasaCollectionItem {
   data: NasaImageData[];
   links: ImageLink[];
 }
 
 export interface NasaApiResponse {
   collection: {
-    items: nasaCollectionItem[];
+    items: NasaCollectionItem[];
     metadata: {
       total_hits: number;
     };
@@ -42,8 +42,8 @@ export interface NasaApiResponse {
 }
 
 function mapNasaCollectionItemToSearchResultItem(
-  item: nasaCollectionItem
-): searchResultItem {
+  item: NasaCollectionItem
+): SearchResultItem {
   const links = item.links.sort((a, b) => {
     return parseInt(a.size || '0') - parseInt(b.size || '0');
   });
@@ -65,7 +65,7 @@ function mapNasaCollectionItemToSearchResultItem(
 
 export async function searchImages(
   params: SearchParams
-): Promise<{ items: searchResultItem[]; pagination: PaginationInfo }> {
+): Promise<{ items: SearchResultItem[]; pagination: PaginationInfo }> {
   const { query, page = 1, pageSize = 10 } = params;
 
   const url = new URL(BASE_URL);

@@ -3,7 +3,7 @@ import Loader from '../loader/loader';
 import NothingFound from '../nothingFound/nothingFound';
 import Pagination from '../pagination/pagination';
 import { searchImages } from '../../api/nasaApi';
-import { PaginationInfo, searchResultItem } from '../../types/types';
+import { PaginationInfo, SearchResultItem } from '../../types/types';
 import { useParams } from 'react-router';
 import { PAGE_SIZE } from '../../constants/constants';
 import Card from '../card/card';
@@ -16,7 +16,7 @@ const CardList: React.FC = () => {
     currentPage: string;
   }>();
 
-  const [items, setItems] = useState<searchResultItem[]>([]);
+  const [items, setItems] = useState<SearchResultItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [pagination, setPagination] = useState<PaginationInfo>({
@@ -52,7 +52,7 @@ const CardList: React.FC = () => {
     if (searchTerm) {
       setPagination((prev) => ({
         ...prev,
-        currentPage: parseInt(currentPage),
+        currentPage: parseInt(currentPage, 10),
       }));
       fetchImages(searchTerm);
     }
