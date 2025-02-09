@@ -2,12 +2,25 @@ import React from 'react';
 import ErrorBoundary from './components/errorBoundary/errorBoundary';
 import './App.css';
 import MainPage from './components/mainPage/mainPage';
+import { Navigate, Route, Routes } from 'react-router';
+import { LS_KEY_SEARCH_TERM } from './constants/constants';
+
+const DEFAULT_PAGE = '1';
 
 const App: React.FC = () => {
+  const searchTermFromLS = localStorage.getItem(LS_KEY_SEARCH_TERM) || '';
+
   return (
     <ErrorBoundary>
-      {/* routing */}
-      <MainPage />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Navigate to={`/${searchTermFromLS}/${DEFAULT_PAGE}`} replace />
+          }
+        />
+        <Route path="/:searchTerm/:currentPage" element={<MainPage />} />
+      </Routes>
     </ErrorBoundary>
   );
 };
