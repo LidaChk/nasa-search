@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loader matches snapshot 1`] = `
+<div
+  aria-label="loading"
+  class="loader"
+>
+  <div />
+  <div />
+  <div />
+  <div />
+</div>
+`;

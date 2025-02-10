@@ -1,0 +1,118 @@
+.detail-item.detail-item--card {
+  display: grid;
+  grid-template-rows: minmax(auto, 50%) 1fr 0;
+  grid-template-columns: auto;
+  height: 100vh;
+  border-top: none;
+  gap: 1rem;
+  margin: 1rem;
+}
+
+.detail-item.detail-item--card .detail-item__image {
+  object-fit: contain;
+}
+
+.detail-item.detail-item--card h3 {
+  text-align: center;
+  text-wrap: balance;
+  overflow: auto;
+}
+
+.detail-item__content.detail-item__content--card {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto 1fr auto;
+  height: auto;
+  overflow: auto;
+}
+
+.detail-item__content.detail-item__content--card * {
+  height: auto;
+}
+
+.detail-item__keywords {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
+  padding: 0.5rem;
+  list-style: none;
+}
+
+.detail-item__keyword {
+  display: flex;
+  align-items: center;
+  padding: 0rem 1rem;
+}
+
+.detail-item__link {
+  transition: 0.3s;
+  text-decoration: none;
+}
+.detail-item__keywords li {
+  box-shadow:
+    -1px 0 0 0 var(--text-color),
+    1px 0 0 0 var(--text-color);
+}
+
+.detail-item__description.detail-item__description--card {
+  height: auto;
+  text-align: left;
+  text-indent: 2em;
+}
+
+.close-button {
+  background-color: transparent;
+  border-color: transparent;
+  cursor: pointer;
+  height: 2rem;
+  width: 2rem;
+  position: absolute;
+  right: 2rem;
+}
+
+.detail-item__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.detail-item__content {
+  height: 100%;
+  margin-bottom: 0;
+  text-align: left;
+  color: var(--text-color);
+  overflow-y: auto;
+}
+
+.detail-item__content::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.detail-item__content::-webkit-scrollbar-track {
+  background: rgba(136, 136, 136, 0.1);
+}
+
+.detail-item__content::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 0, 0.3);
+  filter: var(--hover-filter);
+}
+
+.detail-item__content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 0, 0.8);
+  cursor: pointer;
+}
+
+.detail-item__name {
+  text-align: center;
+  text-wrap: balance;
+}
+
+.detail-item--loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
