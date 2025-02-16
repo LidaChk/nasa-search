@@ -9,7 +9,12 @@ interface CardProps {
   preview: URL;
 }
 
-const Card: React.FC<CardProps> = ({ nasaId, title, description, preview }) => {
+const Card = ({
+  nasaId,
+  title,
+  description,
+  preview,
+}: CardProps): React.JSX.Element => {
   const { searchTerm, currentPage } = useParams();
 
   return (

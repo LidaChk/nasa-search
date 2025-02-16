@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router';
 import Card from './card';
 import { mockItem } from '../__mocks__/mocks';
 
-const BrowserRouterComponent: React.FC = () => {
+const BrowserRouterComponent = (): React.JSX.Element => {
   return (
     <BrowserRouter>
       <Card {...mockItem} />

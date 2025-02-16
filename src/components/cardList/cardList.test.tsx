@@ -38,7 +38,7 @@ const mapMockDataToResponse = (
 });
 describe('CardList', () => {
   afterAll(() => {
-    const _dummyComponent: React.FC = () => {
+    const _dummyComponent = (): React.JSX.Element => {
       return <div>dummy</div>;
     };
     render(<_dummyComponent />);

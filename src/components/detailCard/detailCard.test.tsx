@@ -123,7 +123,7 @@ describe('DetailCard Component', () => {
     expect(closeLink).toHaveAttribute('href', '/search/moon/1');
   });
   afterAll(() => {
-    const _dummyComponent: React.FC = () => {
+    const _dummyComponent = (): React.JSX.Element => {
       return <div>dummy</div>;
     };
     render(<_dummyComponent />);

@@ -10,7 +10,7 @@ import { useParams } from 'react-router';
 
 import './cardList.css';
 
-const CardList: React.FC = () => {
+const CardList = (): React.JSX.Element => {
   const { searchTerm = '', currentPage = '1' } = useParams<{
     searchTerm: string;
     currentPage: string;

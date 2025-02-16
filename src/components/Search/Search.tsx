@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { EMPTY_SEARCH, LS_KEY_SEARCH_TERM } from '../../constants/constants';
 
-const Search: React.FC = () => {
+const Search = (): React.JSX.Element => {
   const { searchTerm = '' } = useParams<{
     searchTerm: string;
   }>();

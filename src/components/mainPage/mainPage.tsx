@@ -4,7 +4,7 @@ import CardList from '../cardList/cardList';
 import './mainPage.css';
 import Search from '../search/search';
 
-const MainPage: React.FC = () => {
+const MainPage = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { searchTerm, currentPage, nasaId } = useParams<{
     searchTerm: string;

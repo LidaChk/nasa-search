@@ -5,7 +5,7 @@ import { searchImages } from '../../api/nasaApi';
 import Loader from '../loader/loader';
 import './detailCard.css';
 
-const DetailCard: React.FC = () => {
+const DetailCard = (): React.JSX.Element => {
   const { nasaId, searchTerm, currentPage } = useParams();
 
   const [item, setItem] = useState<SearchResultItem | null>(null);

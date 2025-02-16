@@ -7,7 +7,7 @@ interface PaginationProps {
   totalPages: number;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
+const Pagination = ({ totalPages }: PaginationProps): React.JSX.Element => {
   const { searchTerm = '', currentPage = '1' } = useParams<{
     searchTerm: string;
     currentPage: string;
