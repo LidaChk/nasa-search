@@ -1,118 +1,106 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
 import { MAX_API_PAGE_NUMBER, PAGE_SIZE } from '../constants/constants';
 import { PaginationInfo, SearchResultItem } from '../types/types';
+import type { SearchParams, NasaApiResponse } from './nasaTypes';
+import { mapNasaCollectionItemToSearchResultItem } from './nasaTransforms';
 
 const API_KEY = 'dW64E3BgmZbrImMrdMSk0hzNIOdpOqtqEGvvz8Ud';
-const BASE_URL = 'https://images-api.nasa.gov/search';
+const BASE_URL = 'https://images-api.nasa.gov';
 
-interface SearchParams {
-  query?: string;
-  nasaId?: string;
-  page?: number;
-  pageSize?: number;
-}
-
-interface NasaImageData {
-  nasa_id: string;
-  title: string;
-  description: string;
-  date_created: string;
-  media_type: 'image';
-  keywords?: string[];
-  [key: string]: string | string[] | undefined;
-}
-
-interface ImageLink {
-  href: string;
-  rel: string;
-  render?: string;
-  size?: string;
-}
-
-export interface NasaCollectionItem {
-  data: NasaImageData[];
-  links: ImageLink[];
-}
-
-export interface NasaApiResponse {
-  collection: {
-    items: NasaCollectionItem[];
-    metadata?: {
-      total_hits?: number;
-    };
-  };
-}
-
-function mapNasaCollectionItemToSearchResultItem(
-  item: NasaCollectionItem
-): SearchResultItem {
-  const links = item.links.sort((a, b) => {
-    return parseInt(a.size || '0') - parseInt(b.size || '0');
-  });
-  return {
-    nasaId: item.data[0].nasa_id,
-    title: item.data[0].title,
-    description: item.data[0].description,
-    dateCreated: item.data[0].date_created,
-    keywords: item.data[0].keywords,
-    preview: new URL(
-      links.find((link) => link.rel === 'preview')?.href || links[0].href
-    ),
-    href: new URL(
-      links.find((link) => link.rel === 'canonical')?.href ||
-        links[links.length - 1].href
-    ),
-  };
-}
-
-export async function searchImages(
-  params: SearchParams
-): Promise<{ items: SearchResultItem[]; pagination: PaginationInfo }> {
-  const { query, nasaId, page = 1, pageSize = PAGE_SIZE } = params;
-
-  const url = new URL(BASE_URL);
-  if (query) {
-    url.searchParams.set('q', query);
-  }
-  if (nasaId) {
-    url.searchParams.set('nasa_id', nasaId);
-  }
-  url.searchParams.set('media_type', 'image');
-  url.searchParams.set('page', page.toString());
-  url.searchParams.set('page_size', pageSize.toString());
-
-  const response = await fetch(url.toString(), {
-    headers: {
-      Authorization: `Bearer ${API_KEY}`,
+export const nasaApi = createApi({
+  reducerPath: 'nasaApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_URL,
+    prepareHeaders: (headers) => {
+      headers.set('Authorization', `Bearer ${API_KEY}`);
+      return headers;
     },
-  });
+  }),
+  tagTypes: ['NasaImages'],
+  endpoints: (builder) => ({
+    searchImages: builder.query<
+      { items: SearchResultItem[]; pagination: PaginationInfo },
+      SearchParams
+    >({
+      query: (params) => {
+        const { query, nasaId, page = 1, pageSize = PAGE_SIZE } = params;
+        const searchParams = new URLSearchParams();
 
-  if (response.status === 404) {
-    throw new Error(`Resource not found (404): ${url.pathname}`);
-  }
+        if (query) searchParams.set('q', query);
+        if (nasaId) searchParams.set('nasa_id', nasaId);
+        searchParams.set('media_type', 'image');
+        searchParams.set('page', page.toString());
+        searchParams.set('page_size', pageSize.toString());
 
-  if (!response.ok) {
-    throw new Error(
-      `NASA API error: ${response.status} ${response.statusText}`
-    );
-  }
+        return {
+          url: '/search',
+          params: searchParams,
+        };
+      },
+      transformResponse: (response: NasaApiResponse, _meta, arg) => {
+        if (!response?.collection?.items) {
+          throw new Error('Invalid response format from NASA API');
+        }
 
-  const data: NasaApiResponse = await response.json();
+        const totalItems = response.collection?.metadata?.total_hits || 0;
+        const calcTotalPages = Math.ceil(
+          totalItems / (arg.pageSize || PAGE_SIZE)
+        );
+        const totalPages = Math.min(calcTotalPages, MAX_API_PAGE_NUMBER);
 
-  if (!data?.collection?.items) {
-    throw new Error('Invalid response format from NASA API');
-  }
+        return {
+          items: response.collection.items.map(
+            mapNasaCollectionItemToSearchResultItem
+          ),
+          pagination: {
+            currentPage: arg.page || 1,
+            totalPages,
+            pageSize: arg.pageSize || PAGE_SIZE,
+          },
+        };
+      },
+      keepUnusedDataFor: 300,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.items.map(({ nasaId }) => ({
+                type: 'NasaImages' as const,
+                id: nasaId,
+              })),
+              { type: 'NasaImages', id: 'LIST' },
+            ]
+          : [{ type: 'NasaImages', id: 'LIST' }],
+    }),
 
-  const totalItems = data.collection?.metadata?.total_hits || 0;
-  const calcTotalPages = Math.ceil(totalItems / pageSize);
-  const totalPages =
-    calcTotalPages > MAX_API_PAGE_NUMBER ? MAX_API_PAGE_NUMBER : calcTotalPages;
+    getImageDetails: builder.query<SearchResultItem, string>({
+      query: (nasaId) => ({
+        url: '/search',
+        params: {
+          nasa_id: nasaId,
+          media_type: 'image',
+        },
+      }),
+      transformResponse: (response: NasaApiResponse) => {
+        if (!response?.collection?.items?.[0]) {
+          throw new Error('Image not found');
+        }
+        return mapNasaCollectionItemToSearchResultItem(
+          response.collection.items[0]
+        );
+      },
+      providesTags: (_result, _error, nasaId) => [
+        { type: 'NasaImages', id: nasaId },
+      ],
+    }),
+  }),
+});
 
-  return {
-    items: data.collection.items.map(mapNasaCollectionItemToSearchResultItem),
-    pagination: {
-      currentPage: page,
-      totalPages,
-      pageSize,
-    },
-  };
-}
+export const {
+  useSearchImagesQuery,
+  useGetImageDetailsQuery,
+  useLazySearchImagesQuery,
+  useLazyGetImageDetailsQuery,
+} = nasaApi;
+
+export const { endpoints } = nasaApi;

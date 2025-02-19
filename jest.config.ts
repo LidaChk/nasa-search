@@ -28,7 +28,10 @@ module.exports = {
     '^.+\\.svg$': 'jest-svg-transformer',
     '^.+\\.css$': 'identity-obj-proxy',
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: [
+    '<rootDir>/jest.setup.ts',
+    '<rootDir>/src/__tests__/setup.ts',
+  ],
   coverageThreshold: {
     global: {
       branches: 70,
