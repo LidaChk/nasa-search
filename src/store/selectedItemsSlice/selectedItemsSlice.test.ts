@@ -31,7 +31,7 @@ describe('selectedItemsSlice', () => {
   it('should handle adding a duplicate item', () => {
     const stateWithItem = selectedItemsReducer(initialState, addItem(testItem));
     const actual = selectedItemsReducer(stateWithItem, addItem(testItem));
-    expect(actual.items).toEqual([testItem, testItem]); // This assumes the slice allows duplicates
+    expect(actual.items).toEqual([testItem, testItem]);
   });
 
   it('should handle removing an item', () => {
