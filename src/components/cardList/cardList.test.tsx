@@ -1,23 +1,18 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { searchImages } from '../../store/nasaApi/nasaApi';
+import { useSearchImagesQuery } from '../../store/nasaApi/nasaApi';
 import CardList from './cardList';
 import { mockNASAData } from '../../store/nasaApi/__mocks__/nasaApiMocks';
 import { PAGE_SIZE } from '../../constants/constants';
 import { PaginationInfo, SearchResultItem } from '../../types/types';
 
-jest.mock('../../api/nasaApi');
-const mockedSearchImages = jest.mocked(searchImages);
-const MOCK_DELAY = 1000;
-const createDelayedResponse = (
-  data: { items: SearchResultItem[]; pagination: PaginationInfo },
-  delay: number = MOCK_DELAY
-): Promise<{ items: SearchResultItem[]; pagination: PaginationInfo }> => {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(data), delay);
-  });
-};
+jest.mock('../../store/nasaApi/nasaApi', () => ({
+  useSearchImagesQuery: jest.fn(),
+}));
+
+const mockedUseSearchImagesQuery = useSearchImagesQuery as jest.Mock;
+
 const mapMockDataToResponse = (
   items = mockNASAData.collection.items
 ): { items: SearchResultItem[]; pagination: PaginationInfo } => ({
@@ -27,8 +22,8 @@ const mapMockDataToResponse = (
     description: item.data[0].description,
     dateCreated: item.data[0].date_created,
     keywords: item.data[0].keywords,
-    preview: new URL(item.links[0].href),
-    href: new URL(item.links[0].href),
+    preview: item.links[0].href,
+    href: item.links[0].href,
   })),
   pagination: {
     currentPage: 1,
@@ -36,14 +31,8 @@ const mapMockDataToResponse = (
     pageSize: PAGE_SIZE,
   },
 });
-describe('CardList', () => {
-  afterAll(() => {
-    const _dummyComponent = (): React.JSX.Element => {
-      return <div>dummy</div>;
-    };
-    render(<_dummyComponent />);
-  });
 
+describe('CardList', () => {
   const renderWithRouter = (searchTerm = '', page = '1') => {
     render(
       <MemoryRouter initialEntries={[`/search?q=${searchTerm}&page=${page}`]}>
@@ -58,75 +47,86 @@ describe('CardList', () => {
     jest.clearAllMocks();
   });
 
-  it('shows loading state initially', async () => {
-    mockedSearchImages.mockImplementationOnce(() =>
-      createDelayedResponse(mapMockDataToResponse())
-    );
-    await act(async () => {
-      renderWithRouter();
+  it('shows loading state initially', () => {
+    mockedUseSearchImagesQuery.mockReturnValue({
+      data: undefined,
+      isFetching: true,
+      isError: false,
     });
+
+    renderWithRouter();
     expect(screen.getByLabelText('loading')).toBeInTheDocument();
   });
 
-  it('displays cards when data is loaded successfully', async () => {
-    mockedSearchImages.mockResolvedValueOnce(mapMockDataToResponse());
+  it('displays cards when data is loaded successfully', () => {
+    mockedUseSearchImagesQuery.mockReturnValue({
+      data: mapMockDataToResponse(),
+      isFetching: false,
+      isError: false,
+    });
 
     renderWithRouter();
 
-    await waitFor(() => {
-      expect(screen.getByText('Apollo 11 Mission Image')).toBeInTheDocument();
-    });
-
+    expect(screen.getByText('Apollo 11 Mission Image')).toBeInTheDocument();
     expect(screen.getByText('Saturn V Launch')).toBeInTheDocument();
   });
 
-  it('shows nothing found message when no results', async () => {
-    mockedSearchImages.mockResolvedValueOnce({
-      items: [],
-      pagination: {
-        currentPage: 1,
-        totalPages: 0,
-        pageSize: 10,
+  it('shows nothing found message when no results', () => {
+    mockedUseSearchImagesQuery.mockReturnValue({
+      data: {
+        items: [],
+        pagination: {
+          currentPage: 1,
+          totalPages: 0,
+          pageSize: 10,
+        },
       },
+      isFetching: false,
+      isError: false,
     });
 
     renderWithRouter('nonexistent');
 
-    await waitFor(() => {
-      expect(screen.getByTestId('nothing-found')).toBeInTheDocument();
-    });
+    expect(screen.getByTestId('nothing-found')).toBeInTheDocument();
   });
 
-  it('shows error message when API call fails', async () => {
-    const errorMessage = 'API Error';
-    mockedSearchImages.mockRejectedValueOnce(new Error(errorMessage));
+  it('shows error message when API call fails', () => {
+    mockedUseSearchImagesQuery.mockReturnValue({
+      data: undefined,
+      isFetching: false,
+      isError: true,
+      error: { data: 'API Error' },
+    });
 
     renderWithRouter();
 
-    await waitFor(() => {
-      expect(screen.getByText(`Error: ${errorMessage}`)).toBeInTheDocument();
-    });
+    expect(screen.getByText(/API Error/i)).toBeInTheDocument();
   });
 
-  it('shows pagination when there are multiple pages', async () => {
-    mockedSearchImages.mockResolvedValueOnce(mapMockDataToResponse());
+  it('shows pagination when there are multiple pages', () => {
+    mockedUseSearchImagesQuery.mockReturnValue({
+      data: mapMockDataToResponse(),
+      isFetching: false,
+      isError: false,
+    });
 
     renderWithRouter();
 
-    await waitFor(() => {
-      expect(screen.getByTestId('pagination')).toBeInTheDocument();
-    });
+    expect(screen.getByTestId('pagination')).toBeInTheDocument();
   });
 
-  it('calls searchImages with correct parameters', async () => {
+  it('calls useSearchImagesQuery with correct parameters', () => {
     renderWithRouter('moon', '2');
 
-    await waitFor(() => {
-      expect(mockedSearchImages).toHaveBeenCalledWith({
-        query: 'moon',
-        page: 2,
-        pageSize: 10,
-      });
+    expect(mockedUseSearchImagesQuery).toHaveBeenCalledWith({
+      query: 'moon',
+      page: 2,
     });
+  });
+  afterAll(() => {
+    const _dummyComponent = (): React.JSX.Element => {
+      return <div>dummy</div>;
+    };
+    render(<_dummyComponent />);
   });
 });
