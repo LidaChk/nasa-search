@@ -1,12 +1,49 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { MAX_API_PAGE_NUMBER, PAGE_SIZE } from '../constants/constants';
-import { PaginationInfo, SearchResultItem } from '../types/types';
-import type { SearchParams, NasaApiResponse } from './nasaTypes';
+import { MAX_API_PAGE_NUMBER, PAGE_SIZE } from '../../constants/constants';
+import { PaginationInfo, SearchResultItem } from '../../types/types';
 import { mapNasaCollectionItemToSearchResultItem } from './nasaTransforms';
 
 const API_KEY = 'dW64E3BgmZbrImMrdMSk0hzNIOdpOqtqEGvvz8Ud';
 const BASE_URL = 'https://images-api.nasa.gov';
+
+export interface SearchParams {
+  query?: string;
+  nasaId?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface NasaImageData {
+  nasa_id: string;
+  title: string;
+  description: string;
+  date_created: string;
+  media_type: 'image';
+  keywords?: string[];
+  [key: string]: string | string[] | undefined;
+}
+
+interface ImageLink {
+  href: string;
+  rel: string;
+  render?: string;
+  size?: string;
+}
+
+export interface NasaCollectionItem {
+  data: NasaImageData[];
+  links: ImageLink[];
+}
+
+export interface NasaApiResponse {
+  collection: {
+    items: NasaCollectionItem[];
+    metadata?: {
+      total_hits?: number;
+    };
+  };
+}
 
 export const nasaApi = createApi({
   reducerPath: 'nasaApi',
@@ -96,11 +133,6 @@ export const nasaApi = createApi({
   }),
 });
 
-export const {
-  useSearchImagesQuery,
-  useGetImageDetailsQuery,
-  useLazySearchImagesQuery,
-  useLazyGetImageDetailsQuery,
-} = nasaApi;
+export const { useSearchImagesQuery, useGetImageDetailsQuery } = nasaApi;
 
 export const { endpoints } = nasaApi;

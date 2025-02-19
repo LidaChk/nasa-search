@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { SearchResultItem } from '../../types/types';
-import { searchImages } from '../../api/nasaApi';
+import { searchImages } from '../../store/nasaApi/nasaApi';
 import Loader from '../loader/loader';
 import './detailCard.css';
 

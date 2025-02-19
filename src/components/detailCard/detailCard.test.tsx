@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
-import { searchImages } from '../../api/nasaApi';
+import { searchImages } from '../../store/nasaApi/nasaApi';
 import { mockItem } from '../../__tests__/__mocks__/mocks';
 import DetailCard from './detailCard';
 

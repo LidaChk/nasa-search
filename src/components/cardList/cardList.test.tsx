@@ -1,9 +1,9 @@
 import React from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { searchImages } from '../../api/nasaApi';
+import { searchImages } from '../../store/nasaApi/nasaApi';
 import CardList from './cardList';
-import { mockNASAData } from '../../api/__mocks__/nasaApiMocks';
+import { mockNASAData } from '../../store/nasaApi/__mocks__/nasaApiMocks';
 import { PAGE_SIZE } from '../../constants/constants';
 import { PaginationInfo, SearchResultItem } from '../../types/types';
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../loader/loader';
 import NothingFound from '../nothingFound/nothingFound';
 import Pagination from '../pagination/pagination';
-import { searchImages } from '../../api/nasaApi';
+import { searchImages } from '../../store/nasaApi/nasaApi';
 import { PaginationInfo, SearchResultItem } from '../../types/types';
 import { PAGE_SIZE } from '../../constants/constants';
 import Card from '../card/card';
