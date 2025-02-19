@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import Search from './search';
 import useLocalStorage from '../../hooks/useLocalStorage';
 
 jest.mock('react-router', () => ({
   useNavigate: jest.fn(),
-  useParams: jest.fn(),
+  useSearchParams: jest.fn(),
 }));
 
 jest.mock('../../hooks/useLocalStorage', () => jest.fn());
@@ -23,7 +23,10 @@ describe('Search', () => {
 
   describe('Component Rendering', () => {
     it('renders search form with all required elements', () => {
-      (useParams as jest.Mock).mockReturnValue({ searchTerm: '' });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({}),
+        jest.fn(),
+      ]);
       render(<Search />);
 
       expect(screen.getByRole('searchbox')).toBeInTheDocument();
@@ -35,7 +38,10 @@ describe('Search', () => {
     });
 
     it('initializes with empty input when no searchTerm param', () => {
-      (useParams as jest.Mock).mockReturnValue({});
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({}),
+        jest.fn(),
+      ]);
       render(<Search />);
 
       expect(screen.getByRole('searchbox')).toHaveValue('');
@@ -44,14 +50,24 @@ describe('Search', () => {
 
   describe('Input Handling', () => {
     it('initializes input value from URL parameter', () => {
-      (useParams as jest.Mock).mockReturnValue({ searchTerm: 'test query' });
+      const testTerm = 'test query';
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: testTerm,
+          page: '1',
+        }),
+        jest.fn(),
+      ]);
       render(<Search />);
 
-      expect(screen.getByRole('searchbox')).toHaveValue('test query');
+      expect(screen.getByRole('searchbox')).toHaveValue(testTerm);
     });
 
     it('updates input value when typing', () => {
-      (useParams as jest.Mock).mockReturnValue({ searchTerm: '' });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({}),
+        jest.fn(),
+      ]);
       render(<Search />);
 
       const searchInput = screen.getByRole('searchbox');
@@ -61,7 +77,13 @@ describe('Search', () => {
     });
 
     it('handles special characters in input', () => {
-      (useParams as jest.Mock).mockReturnValue({ searchTerm: '' });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: '',
+          page: '1',
+        }),
+        jest.fn(),
+      ]);
       render(<Search />);
 
       const searchInput = screen.getByRole('searchbox');
@@ -73,7 +95,14 @@ describe('Search', () => {
 
   describe('Form Submission', () => {
     it('navigates to search results and updates localStorage on form submission', () => {
-      (useParams as jest.Mock).mockReturnValue({ searchTerm: '' });
+      const newSearch = 'new search';
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: '',
+          page: '1',
+        }),
+        jest.fn(),
+      ]);
       (useLocalStorage as jest.Mock).mockReturnValue([
         'old term',
         mockSetSearchTermLS,
@@ -83,15 +112,24 @@ describe('Search', () => {
       const searchInput = screen.getByRole('searchbox');
       const form = screen.getByRole('form');
 
-      fireEvent.change(searchInput, { target: { value: '  new search  ' } });
+      fireEvent.change(searchInput, { target: { value: `  ${newSearch}  ` } });
       fireEvent.submit(form);
 
-      expect(mockSetSearchTermLS).toHaveBeenCalledWith('new search');
-      expect(mockNavigate).toHaveBeenCalledWith('/search/new search/1');
+      expect(mockSetSearchTermLS).toHaveBeenCalledWith(newSearch);
+      expect(mockNavigate).toHaveBeenCalledWith({
+        pathname: '/search',
+        search: `?q=${newSearch}&page=1`,
+      });
     });
 
     it('handles empty form submission', () => {
-      (useParams as jest.Mock).mockReturnValue({ searchTerm: '' });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: '',
+          page: '1',
+        }),
+        jest.fn(),
+      ]);
       render(<Search />);
 
       const form = screen.getByRole('form');
@@ -99,12 +137,21 @@ describe('Search', () => {
       fireEvent.change(searchInput, { target: { value: '' } });
       fireEvent.submit(form);
 
-      expect(mockNavigate).toHaveBeenCalledWith('/search/_empty/1');
+      expect(mockNavigate).toHaveBeenCalledWith({
+        pathname: '/search',
+        search: '?q=&page=1',
+      });
     });
 
     it('does not update localStorage if search term has not changed', () => {
       const existingTerm = 'existing search';
-      (useParams as jest.Mock).mockReturnValue({ searchTerm: existingTerm });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: existingTerm,
+          page: '1',
+        }),
+        jest.fn(),
+      ]);
       (useLocalStorage as jest.Mock).mockReturnValue([
         existingTerm,
         mockSetSearchTermLS,
@@ -115,7 +162,10 @@ describe('Search', () => {
       fireEvent.submit(form);
 
       expect(mockSetSearchTermLS).not.toHaveBeenCalled();
-      expect(mockNavigate).toHaveBeenCalledWith('/search/existing search/1');
+      expect(mockNavigate).toHaveBeenCalledWith({
+        pathname: '/search',
+        search: `?q=${existingTerm}&page=1`,
+      });
     });
   });
   afterAll(() => {

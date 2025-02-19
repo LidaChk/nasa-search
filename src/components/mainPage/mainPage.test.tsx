@@ -41,20 +41,13 @@ describe('MainPage Component', () => {
     };
 
     const route = withNasaId
-      ? '/search/moon/1/details/banana'
-      : '/search/moon/1';
+      ? '/search?q=moon&page=1&details=banana'
+      : '/search?q=moon&page=1';
 
     return render(
       <MemoryRouter initialEntries={[route]}>
         <Routes>
-          <Route
-            path="/search/:searchTerm/:currentPage"
-            element={<MainPage />}
-          />
-          <Route
-            path="/search/:searchTerm/:currentPage/details/:nasaId"
-            element={<MainPage />}
-          />
+          <Route path="/search" element={<MainPage />} />
         </Routes>
       </MemoryRouter>
     );
@@ -103,7 +96,7 @@ describe('MainPage Component', () => {
     if (mainContainer) {
       fireEvent.click(mainContainer);
     }
-    expect(mockNavigate).toHaveBeenCalledWith('/search/moon/1');
+    expect(mockNavigate).toHaveBeenCalledWith('/search?q=moon&page=1');
   });
 
   it('does not navigate when clicking container without nasaId', () => {

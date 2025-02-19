@@ -2,7 +2,19 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
 import Card from './card';
-import { mockItem } from '../__mocks__/mocks';
+import { mockItem } from '../../__tests__/__mocks__/mocks';
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useSearchParams: () => [
+    new URLSearchParams({
+      q: 'moon',
+      page: '1',
+      details: 'test-nasa-id',
+    }),
+  ],
+  useNavigate: jest.fn(),
+}));
 
 const BrowserRouterComponent = (): React.JSX.Element => {
   return (
@@ -33,7 +45,7 @@ describe('Card Component', () => {
     const link = screen.getByRole('link');
     expect(link).toHaveAttribute(
       'href',
-      expect.stringContaining(`/details/${mockItem.nasaId}`)
+      expect.stringContaining(`details=${mockItem.nasaId}`)
     );
   });
 

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { SearchResultItem } from '../../types/types';
 import { searchImages } from '../../api/nasaApi';
 import Loader from '../loader/loader';
 import './detailCard.css';
 
 const DetailCard = (): React.JSX.Element => {
-  const { nasaId, searchTerm, currentPage } = useParams();
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('q');
+  const currentPage = searchParams.get('page') || '1';
+  const nasaId = searchParams.get('details');
 
   const [item, setItem] = useState<SearchResultItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -81,7 +84,7 @@ const DetailCard = (): React.JSX.Element => {
               </div>
             </div>
             <Link
-              to={`/search/${searchTerm}/${currentPage}`}
+              to={`/search?q=${searchTerm}&page=${currentPage}`}
               className="close-button"
             >
               <h3>x</h3>

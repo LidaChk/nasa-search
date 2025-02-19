@@ -1,6 +1,6 @@
 import React from 'react';
 import './card.css';
-import { NavLink, useParams } from 'react-router';
+import { NavLink, useSearchParams } from 'react-router';
 
 interface CardProps {
   nasaId: string;
@@ -15,11 +15,13 @@ const Card = ({
   description,
   preview,
 }: CardProps): React.JSX.Element => {
-  const { searchTerm, currentPage } = useParams();
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('q');
+  const currentPage = searchParams.get('page') || '1';
 
   return (
     <NavLink
-      to={`/search/${searchTerm}/${currentPage}/details/${nasaId}`}
+      to={`/search?q=${searchTerm}&page=${currentPage}&details=${nasaId}`}
       className="card"
       key={nasaId}
     >

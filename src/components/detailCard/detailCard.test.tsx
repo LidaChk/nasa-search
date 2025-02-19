@@ -1,27 +1,28 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
-import DetailCard from './detailCard';
 import { searchImages } from '../../api/nasaApi';
-import { mockItem } from '../__mocks__/mocks';
+import { mockItem } from '../../__tests__/__mocks__/mocks';
+import DetailCard from './detailCard';
 
-jest.mock('../../api/nasaApi');
 const mockedSearchImages = jest.mocked(searchImages);
+jest.mock('../../api/nasaApi');
+
+const DetailCardMock = () => (<DetailCard />) as React.JSX.Element;
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useParams: () => ({
-    nasaId: 'test-nasa-id',
-    searchTerm: 'moon',
-    currentPage: '1',
-  }),
+  useSearchParams: () => [
+    new URLSearchParams({
+      q: 'moon',
+      page: '1',
+      details: 'test-nasa-id',
+    }),
+  ],
+  useNavigate: jest.fn(),
 }));
 
 describe('DetailCard Component', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('triggers API call to fetch detailed information on mount', async () => {
     mockedSearchImages.mockResolvedValue({
       items: [mockItem],
@@ -35,7 +36,7 @@ describe('DetailCard Component', () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          <DetailCard />
+          <DetailCardMock />
         </BrowserRouter>
       );
     });
@@ -52,7 +53,7 @@ describe('DetailCard Component', () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          <DetailCard />
+          <DetailCardMock />
         </BrowserRouter>
       );
     });
@@ -73,7 +74,7 @@ describe('DetailCard Component', () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          <DetailCard />
+          <DetailCardMock />
         </BrowserRouter>
       );
     });
@@ -107,7 +108,7 @@ describe('DetailCard Component', () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          <DetailCard />
+          <DetailCardMock />
         </BrowserRouter>
       );
     });
@@ -120,12 +121,6 @@ describe('DetailCard Component', () => {
     expect(closeButton).toBeInTheDocument();
 
     const closeLink = closeButton.closest('a');
-    expect(closeLink).toHaveAttribute('href', '/search/moon/1');
-  });
-  afterAll(() => {
-    const _dummyComponent = (): React.JSX.Element => {
-      return <div>dummy</div>;
-    };
-    render(<_dummyComponent />);
+    expect(closeLink).toHaveAttribute('href', '/search?q=moon&page=1');
   });
 });

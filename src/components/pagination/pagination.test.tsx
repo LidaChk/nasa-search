@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import Pagination from './pagination';
 
 jest.mock('react-router', () => ({
   useNavigate: jest.fn(),
-  useParams: jest.fn(),
+  useSearchParams: jest.fn(),
 }));
 
 describe('Pagination', () => {
@@ -17,10 +17,13 @@ describe('Pagination', () => {
   });
 
   it('renders pagination with correct page information', () => {
-    (useParams as jest.Mock).mockReturnValue({
-      searchTerm: 'test',
-      currentPage: '2',
-    });
+    (useSearchParams as jest.Mock).mockReturnValue([
+      new URLSearchParams({
+        q: 'test',
+        page: '2',
+      }),
+      jest.fn(),
+    ]);
 
     render(<Pagination totalPages={5} />);
 
@@ -32,11 +35,13 @@ describe('Pagination', () => {
 
   describe('button states', () => {
     it('disables Previous button on first page', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: 'test',
-        currentPage: '1',
-      });
-
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: 'test',
+          page: '1',
+        }),
+        jest.fn(),
+      ]);
       render(<Pagination totalPages={5} />);
 
       expect(screen.getByText('Previous')).toBeDisabled();
@@ -44,10 +49,13 @@ describe('Pagination', () => {
     });
 
     it('disables Next button on last page', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: 'test',
-        currentPage: '5',
-      });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: 'test',
+          page: '5',
+        }),
+        jest.fn(),
+      ]);
 
       render(<Pagination totalPages={5} />);
 
@@ -56,10 +64,13 @@ describe('Pagination', () => {
     });
 
     it('enables both buttons on middle pages', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: 'test',
-        currentPage: '3',
-      });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: 'test',
+          page: '3',
+        }),
+        jest.fn(),
+      ]);
 
       render(<Pagination totalPages={5} />);
 
@@ -70,45 +81,56 @@ describe('Pagination', () => {
 
   describe('navigation functionality', () => {
     it('navigates to previous page when Previous button is clicked', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: 'test',
-        currentPage: '3',
-      });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: 'test',
+          page: '3',
+        }),
+        jest.fn(),
+      ]);
 
       render(<Pagination totalPages={5} />);
 
       fireEvent.click(screen.getByText('Previous'));
-      expect(mockNavigate).toHaveBeenCalledWith('/search/test/2');
+      expect(mockNavigate).toHaveBeenCalledWith('/search?q=test&page=2');
     });
 
     it('navigates to next page when Next button is clicked', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: 'test',
-        currentPage: '3',
-      });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: 'test',
+          page: '3',
+        }),
+        jest.fn(),
+      ]);
 
       render(<Pagination totalPages={5} />);
 
       fireEvent.click(screen.getByText('Next'));
-      expect(mockNavigate).toHaveBeenCalledWith('/search/test/4');
+      expect(mockNavigate).toHaveBeenCalledWith('/search?q=test&page=4');
     });
   });
 
   describe('edge cases', () => {
     it('handles empty search term correctly', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: '',
-        currentPage: '2',
-      });
-
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: '',
+          page: '2',
+        }),
+        jest.fn(),
+      ]);
       render(<Pagination totalPages={5} />);
 
       fireEvent.click(screen.getByText('Next'));
-      expect(mockNavigate).toHaveBeenCalledWith('/search//3');
+      expect(mockNavigate).toHaveBeenCalledWith('/search?q=&page=3');
     });
 
     it('handles undefined params correctly', () => {
-      (useParams as jest.Mock).mockReturnValue({});
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({}),
+        jest.fn(),
+      ]);
 
       render(<Pagination totalPages={5} />);
 
@@ -117,10 +139,13 @@ describe('Pagination', () => {
     });
 
     it('handles string totalPages correctly', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: 'test',
-        currentPage: '2',
-      });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: 'test',
+          page: '2',
+        }),
+        jest.fn(),
+      ]);
 
       render(<Pagination totalPages={5} />);
 
@@ -128,10 +153,13 @@ describe('Pagination', () => {
     });
 
     it('handles single page correctly', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: 'test',
-        currentPage: '1',
-      });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: 'test',
+          page: '1',
+        }),
+        jest.fn(),
+      ]);
 
       render(<Pagination totalPages={1} />);
 
@@ -142,10 +170,13 @@ describe('Pagination', () => {
 
   describe('button click handling', () => {
     it('prevents navigation when Previous button is disabled', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: 'test',
-        currentPage: '1',
-      });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: 'test',
+          page: '1',
+        }),
+        jest.fn(),
+      ]);
 
       render(<Pagination totalPages={5} />);
 
@@ -154,10 +185,13 @@ describe('Pagination', () => {
     });
 
     it('prevents navigation when Next button is disabled', () => {
-      (useParams as jest.Mock).mockReturnValue({
-        searchTerm: 'test',
-        currentPage: '5',
-      });
+      (useSearchParams as jest.Mock).mockReturnValue([
+        new URLSearchParams({
+          q: 'test',
+          page: '5',
+        }),
+        jest.fn(),
+      ]);
 
       render(<Pagination totalPages={5} />);
 
@@ -165,7 +199,6 @@ describe('Pagination', () => {
       expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
-
   afterAll(() => {
     const _dummyComponent = (): React.JSX.Element => {
       return <div>dummy</div>;

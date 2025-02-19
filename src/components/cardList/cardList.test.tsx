@@ -4,7 +4,7 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import { searchImages } from '../../api/nasaApi';
 import CardList from './cardList';
 import { mockNASAData } from '../../api/__mocks__/nasaApiMocks';
-import { EMPTY_SEARCH, PAGE_SIZE } from '../../constants/constants';
+import { PAGE_SIZE } from '../../constants/constants';
 import { PaginationInfo, SearchResultItem } from '../../types/types';
 
 jest.mock('../../api/nasaApi');
@@ -44,14 +44,11 @@ describe('CardList', () => {
     render(<_dummyComponent />);
   });
 
-  const renderWithRouter = (searchTerm = EMPTY_SEARCH, page = '1') => {
+  const renderWithRouter = (searchTerm = '', page = '1') => {
     render(
-      <MemoryRouter initialEntries={[`/search/${searchTerm}/${page}`]}>
+      <MemoryRouter initialEntries={[`/search?q=${searchTerm}&page=${page}`]}>
         <Routes>
-          <Route
-            path="/search/:searchTerm/:currentPage"
-            element={<CardList />}
-          />
+          <Route path="/search" element={<CardList />} />
         </Routes>
       </MemoryRouter>
     );

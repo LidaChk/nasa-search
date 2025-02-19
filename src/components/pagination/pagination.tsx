@@ -1,23 +1,22 @@
 import React, { useCallback } from 'react';
 
 import './pagination.css';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 interface PaginationProps {
   totalPages: number;
 }
 
 const Pagination = ({ totalPages }: PaginationProps): React.JSX.Element => {
-  const { searchTerm = '', currentPage = '1' } = useParams<{
-    searchTerm: string;
-    currentPage: string;
-  }>();
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('q') || '';
+  const currentPage = searchParams.get('page') || '1';
 
   const navigate = useNavigate();
 
   const onPageChange = useCallback(
     (page: number) => {
-      navigate(`/search/${searchTerm}/${page}`);
+      navigate(`/search?q=${searchTerm}&page=${page}`);
     },
     [navigate, searchTerm]
   );
