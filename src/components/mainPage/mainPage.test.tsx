@@ -90,15 +90,6 @@ describe('MainPage Component', () => {
     expect(screen.getByTestId('card-list')).toBeInTheDocument();
   });
 
-  it('navigates back when clicking container with nasaId', () => {
-    const { container } = renderWithRouter(true);
-    const mainContainer = container.querySelector('.main-page-container');
-    if (mainContainer) {
-      fireEvent.click(mainContainer);
-    }
-    expect(mockNavigate).toHaveBeenCalledWith('/search?q=moon&page=1');
-  });
-
   it('does not navigate when clicking container without nasaId', () => {
     const { container } = renderWithRouter(false);
     const mainContainer = container.querySelector('.main-page-container');

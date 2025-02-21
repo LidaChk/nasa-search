@@ -1,25 +1,16 @@
 import React from 'react';
-import { Outlet, useNavigate, useSearchParams } from 'react-router';
+import { Outlet, useSearchParams } from 'react-router';
 import CardList from '../cardList/cardList';
 import './mainPage.css';
 import Search from '../search/search';
 
 const MainPage = (): React.JSX.Element => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const searchTerm = searchParams.get('q');
-  const currentPage = searchParams.get('page') || '1';
   const nasaId = searchParams.get('details');
-  const handleContainerClick = () => {
-    if (nasaId) {
-      navigate(`/search?q=${searchTerm}&page=${currentPage}`);
-    }
-  };
 
   return (
     <div
       className={`main-page-container ${nasaId ? 'main-page-container__detail' : ''}`}
-      onClick={handleContainerClick}
     >
       <div className={`app-header ${nasaId ? 'app-header__detail' : ''}`}>
         <h1>NASA Image search</h1>
