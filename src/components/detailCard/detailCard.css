@@ -95,12 +95,12 @@
 }
 
 .detail-item__content::-webkit-scrollbar-thumb {
-  background: rgba(0, 255, 0, 0.3);
+  background: var(--primary-act-color-transparent);
   filter: var(--hover-filter);
 }
 
 .detail-item__content::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 255, 0, 0.8);
+  background: var(--primary-act-color);
   cursor: pointer;
 }
 

@@ -32,15 +32,9 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  scrollbar-gutter: stable;
 }
 
 body {
-  background-color: var(--background-color);
-  background: url(./assets/noise.svg), var(--background-color);
-  background-size: contain;
-  background-attachment: fixed;
-  color: var(--text-color);
   font-family: var(--font-family);
   font-weight: 400;
   line-height: 1.6;
