@@ -4,7 +4,12 @@
   align-items: center;
   gap: 1rem;
   padding: 0.5rem 0;
-  background-color: transparent;
+  background-color: var(--primary-act-color-transparent);
+  width: 100%;
+}
+
+.flyout__button--unselect {
+  background-color: var(--accent-color);
 }
 
 .flyout__info {

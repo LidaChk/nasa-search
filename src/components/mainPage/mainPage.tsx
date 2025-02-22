@@ -19,8 +19,8 @@ const MainPage = (): React.JSX.Element => {
       </div>
       <div className={`main-page ${nasaId ? 'main-page__detail' : ''}`}>
         <CardList />
-        <Flyout />
       </div>
+      <Flyout />
       {nasaId && (
         <div className="details-section">
           <Outlet />

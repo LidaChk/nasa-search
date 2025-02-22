@@ -36,7 +36,7 @@ describe('Card Component', () => {
     expect(screen.getByText(mockItem.description)).toBeInTheDocument();
     const image = screen.getByAltText(mockItem.title);
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('src', mockItem.preview.href);
+    expect(image).toHaveAttribute('src', mockItem.preview);
   });
 
   it('renders link with correct navigation path', () => {
