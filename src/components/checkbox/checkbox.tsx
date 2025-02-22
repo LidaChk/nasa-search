@@ -1,3 +1,4 @@
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isItemSelectedById } from '../../store/selectedItemsSlice/selectors';
 import {
@@ -13,7 +14,7 @@ interface CheckBoxProps {
   nasaId: string;
 }
 
-const CheckBox = ({ nasaId }: CheckBoxProps) => {
+const CheckBox = ({ nasaId }: CheckBoxProps): React.JSX.Element => {
   const dispatch = useDispatch();
   const isChecked = useSelector(isItemSelectedById(nasaId));
   const item = useSelector(selectItemFromQueries(nasaId));
@@ -28,8 +29,6 @@ const CheckBox = ({ nasaId }: CheckBoxProps) => {
       dispatch(addItem(item));
     }
   };
-
-  console.log({ nasaId, isChecked });
 
   return (
     <input

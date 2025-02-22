@@ -6,10 +6,42 @@ import CardList from './cardList';
 import { mockNASAData } from '../../store/nasaApi/__mocks__/nasaApiMocks';
 import { PAGE_SIZE } from '../../constants/constants';
 import { PaginationInfo, SearchResultItem } from '../../types/types';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 
 jest.mock('../../store/nasaApi/nasaApi', () => ({
   useSearchImagesQuery: jest.fn(),
+  nasaApi: {
+    reducerPath: 'nasaApi',
+    reducer: jest.fn(),
+    middleware: jest.fn(),
+  },
 }));
+
+const mockStore = configureStore({
+  reducer: {
+    nasaApi: (
+      state = {
+        queries: {},
+        mutations: {},
+        provided: {},
+        subscriptions: {},
+        config: {},
+      }
+    ) => state,
+    selectedItems: (state = {}) => state,
+  },
+  preloadedState: {
+    nasaApi: {
+      queries: {},
+      mutations: {},
+      provided: {},
+      subscriptions: {},
+      config: {},
+    },
+    selectedItems: {},
+  },
+});
 
 const mockedUseSearchImagesQuery = useSearchImagesQuery as jest.Mock;
 
@@ -35,11 +67,13 @@ const mapMockDataToResponse = (
 describe('CardList', () => {
   const renderWithRouter = (searchTerm = '', page = '1') => {
     render(
-      <MemoryRouter initialEntries={[`/search?q=${searchTerm}&page=${page}`]}>
-        <Routes>
-          <Route path="/search" element={<CardList />} />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={mockStore}>
+        <MemoryRouter initialEntries={[`/search?q=${searchTerm}&page=${page}`]}>
+          <Routes>
+            <Route path="/search" element={<CardList />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
   };
 
