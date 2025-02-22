@@ -15,6 +15,12 @@ jest.mock('../search/search', () => {
   };
 });
 
+jest.mock('../flyout/flyout', () => {
+  return function DummyFlyout() {
+    return <div data-testid="flyout">Flyout Component</div>;
+  };
+});
+
 const mockNavigate = jest.fn();
 let mockParams = {
   searchTerm: 'moon',
@@ -88,6 +94,11 @@ describe('MainPage Component', () => {
   it('renders CardList component', () => {
     renderWithRouter();
     expect(screen.getByTestId('card-list')).toBeInTheDocument();
+  });
+
+  it('renders Flyout component', () => {
+    renderWithRouter();
+    expect(screen.getByTestId('flyout')).toBeInTheDocument();
   });
 
   it('does not navigate when clicking container without nasaId', () => {

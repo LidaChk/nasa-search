@@ -1,0 +1,15 @@
+.flyout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  background-color: transparent;
+}
+
+.flyout__info {
+  font-family: var(--h-font-family);
+  color: var(--primary-act-color);
+  min-width: 150px;
+  text-align: center;
+}

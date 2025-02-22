@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useSearchParams } from 'react-router';
 import CardList from '../cardList/cardList';
+import Flyout from '../flyout/flyout';
 import './mainPage.css';
 import Search from '../search/search';
 
@@ -18,6 +19,7 @@ const MainPage = (): React.JSX.Element => {
       </div>
       <div className={`main-page ${nasaId ? 'main-page__detail' : ''}`}>
         <CardList />
+        <Flyout />
       </div>
       {nasaId && (
         <div className="details-section">
