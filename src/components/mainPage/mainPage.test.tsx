@@ -4,19 +4,19 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 import MainPage from './mainPage';
 
 jest.mock('../cardList/cardList', () => {
-  return function DummyCardList() {
+  return function DummyCardList(): React.JSX.Element {
     return <div data-testid="card-list">CardList Component</div>;
   };
 });
 
 jest.mock('../search/search', () => {
-  return function DummySearch() {
+  return function DummySearch(): React.JSX.Element {
     return <div data-testid="search">Search Component</div>;
   };
 });
 
 jest.mock('../flyout/flyout', () => {
-  return function DummyFlyout() {
+  return function DummyFlyout(): React.JSX.Element {
     return <div data-testid="flyout">Flyout Component</div>;
   };
 });
@@ -108,11 +108,5 @@ describe('MainPage Component', () => {
       fireEvent.click(mainContainer);
     }
     expect(mockNavigate).not.toHaveBeenCalled();
-  });
-  afterAll(() => {
-    const _dummyComponent = (): React.JSX.Element => {
-      return <div>dummy</div>;
-    };
-    render(<_dummyComponent />);
   });
 });
