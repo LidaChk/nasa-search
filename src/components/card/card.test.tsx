@@ -71,7 +71,7 @@ describe('Card Component', () => {
   it('renders link with correct navigation path', () => {
     renderCard();
 
-    const link = screen.getByRole('link');
+    const link = screen.getByTestId('img-link');
     expect(link).toHaveAttribute(
       'href',
       expect.stringContaining(`details=${mockItem.nasaId}`)
@@ -81,7 +81,8 @@ describe('Card Component', () => {
   it('applies correct CSS classes', () => {
     renderCard();
 
-    expect(screen.getByRole('link')).toHaveClass('card');
+    expect(screen.getByTestId('img-link')).toHaveClass('card__image-container');
+    expect(screen.getByTestId('card-link')).toHaveClass('card__content');
     expect(screen.getByRole('img').parentElement).toHaveClass(
       'card__image-container'
     );

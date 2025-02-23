@@ -21,23 +21,27 @@ const Card = ({
   const currentPage = searchParams.get('page') || '1';
 
   return (
-    <NavLink
-      to={`/search?q=${searchTerm}&page=${currentPage}&details=${nasaId}`}
-      className="card"
-      key={nasaId}
-    >
+    <div className="card" key={nasaId}>
       <Checkbox nasaId={nasaId} />
-      <div className="card__image-container">
+      <NavLink
+        data-testid="img-link"
+        to={`/search?q=${searchTerm}&page=${currentPage}&details=${nasaId}`}
+        className="card__image-container"
+      >
         <img src={preview} alt={title} className="card__image" />
-      </div>
-      <div className="card__content">
+      </NavLink>
+      <NavLink
+        data-testid="card-link"
+        to={`/search?q=${searchTerm}&page=${currentPage}&details=${nasaId}`}
+        className="card__content"
+      >
         <h3 className="card__title">{title}</h3>
         <p
           className="card__description"
           dangerouslySetInnerHTML={{ __html: description }}
         ></p>
-      </div>
-    </NavLink>
+      </NavLink>
+    </div>
   );
 };
 

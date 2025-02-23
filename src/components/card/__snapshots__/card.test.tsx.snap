@@ -2,27 +2,31 @@
 
 exports[`Card Component matches the snapshot 1`] = `
 <DocumentFragment>
-  <a
+  <div
     class="card"
-    data-discover="true"
-    href="/search?q=moon&page=1&details=test-nasa-id"
   >
     <input
       class="checkbox-input"
       id="test-nasa-id"
       type="checkbox"
     />
-    <div
+    <a
       class="card__image-container"
+      data-discover="true"
+      data-testid="img-link"
+      href="/search?q=moon&page=1&details=test-nasa-id"
     >
       <img
         alt="Apollo 11 Mission Image"
         class="card__image"
         src="https://example.com/preview.jpg"
       />
-    </div>
-    <div
+    </a>
+    <a
       class="card__content"
+      data-discover="true"
+      data-testid="card-link"
+      href="/search?q=moon&page=1&details=test-nasa-id"
     >
       <h3
         class="card__title"
@@ -34,7 +38,7 @@ exports[`Card Component matches the snapshot 1`] = `
       >
         Test Description
       </p>
-    </div>
-  </a>
+    </a>
+  </div>
 </DocumentFragment>
 `;
