@@ -12,7 +12,7 @@ const DetailCard = (): React.JSX.Element => {
 
   const {
     data: item,
-    isLoading,
+    isFetching,
     error,
   } = useGetImageDetailsQuery(nasaId ?? '', {
     skip: !nasaId,
@@ -30,10 +30,10 @@ const DetailCard = (): React.JSX.Element => {
   return (
     <div
       className={`detail-item ${
-        isLoading ? 'detail-item--loader' : 'detail-item--card'
+        isFetching ? 'detail-item--loader' : 'detail-item--card'
       }`}
     >
-      {isLoading ? (
+      {isFetching ? (
         <Loader />
       ) : (
         item && (
@@ -43,6 +43,7 @@ const DetailCard = (): React.JSX.Element => {
                 src={item.href}
                 alt={item.title}
                 className="detail-item__image"
+                loading="eager"
               />
             </div>
             <div className="detail-item__content detail-item__content--card">

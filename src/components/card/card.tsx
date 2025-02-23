@@ -1,7 +1,7 @@
 import React from 'react';
 import './card.css';
 import { NavLink, useSearchParams } from 'react-router';
-import CheckBox from '../checkbox/checkbox';
+import Checkbox from '../checkbox/checkbox';
 
 interface CardProps {
   nasaId: string;
@@ -26,7 +26,7 @@ const Card = ({
       className="card"
       key={nasaId}
     >
-      <CheckBox nasaId={nasaId} />
+      <Checkbox nasaId={nasaId} />
       <div className="card__image-container">
         <img src={preview} alt={title} className="card__image" />
       </div>

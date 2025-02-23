@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store/store';
 import { unselectAll } from '../../store/selectedItemsSlice/selectedItemsSlice';
 
 import './flyout.css';
+import { getAllItems } from '../../store/selectedItemsSlice/selectors';
 
 const Flyout: React.FC = () => {
   const dispatch = useDispatch();
-  const selectedItems = useSelector(
-    (state: RootState) => state.selectedItems.items
-  );
+  const selectedItems = useSelector(getAllItems());
   const [isFlyoutVisible, setIsFlyoutVisible] = useState(false);
   const downloadLinkRef = useRef<HTMLAnchorElement>(null);
 

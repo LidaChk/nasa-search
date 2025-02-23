@@ -10,11 +10,11 @@ import { selectItemFromQueries } from '../../store/nasaApi/nasaSelectors';
 
 import './checkbox.css';
 
-interface CheckBoxProps {
+interface CheckboxProps {
   nasaId: string;
 }
 
-const CheckBox = ({ nasaId }: CheckBoxProps): React.JSX.Element => {
+const Checkbox = ({ nasaId }: CheckboxProps): React.JSX.Element => {
   const dispatch = useDispatch();
   const isChecked = useSelector(isItemSelectedById(nasaId));
   const item = useSelector(selectItemFromQueries(nasaId));
@@ -30,6 +30,8 @@ const CheckBox = ({ nasaId }: CheckBoxProps): React.JSX.Element => {
     }
   };
 
+  console.log({ isChecked });
+
   return (
     <input
       className="checkbox-input"
@@ -42,4 +44,4 @@ const CheckBox = ({ nasaId }: CheckBoxProps): React.JSX.Element => {
   );
 };
 
-export default CheckBox;
+export default Checkbox;

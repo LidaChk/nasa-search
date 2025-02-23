@@ -1,12 +1,14 @@
 import { createSelector } from 'reselect';
 import { RootState } from '../store';
+import { SearchResultItem } from '../../types/types';
 
 const getSelectedItemsState = (state: RootState) => state.selectedItems.items;
 
-export const getAllItems = createSelector(
-  [getSelectedItemsState],
-  (selectedItemsState) => selectedItemsState
-);
+export const getAllItems = (): ((_state: RootState) => SearchResultItem[]) =>
+  createSelector(
+    [getSelectedItemsState],
+    (selectedItemsState) => selectedItemsState
+  );
 
 export const isItemSelectedById = (
   id: string
