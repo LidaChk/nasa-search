@@ -12,7 +12,7 @@
 
 .main-page-container {
   background-color: var(--background-color);
-  background: url(./assets/noise.svg), var(--background-color);
+  background: url(../../assets/noise.svg), var(--background-color);
   background-size: contain;
   background-attachment: fixed;
   color: var(--text-color);
