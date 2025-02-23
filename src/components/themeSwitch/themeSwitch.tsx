@@ -19,7 +19,7 @@ const ThemeSwitch = (): React.JSX.Element => {
         type="checkbox"
         id="theme-switch-toggle"
         className="theme-switch__toggle"
-        checked={theme === 'light'}
+        checked={theme === 'dark'}
         onChange={toggleTheme}
       />
       <label

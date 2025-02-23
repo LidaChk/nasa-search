@@ -7,7 +7,7 @@ import { getAllItems } from '../../store/selectedItemsSlice/selectors';
 
 const Flyout: React.FC = () => {
   const dispatch = useDispatch();
-  const selectedItems = useSelector(getAllItems());
+  const selectedItems = useSelector(getAllItems);
   const [isFlyoutVisible, setIsFlyoutVisible] = useState(false);
   const downloadLinkRef = useRef<HTMLAnchorElement>(null);
 
@@ -20,7 +20,8 @@ const Flyout: React.FC = () => {
     setIsFlyoutVisible(false);
   };
 
-  const handleDownload = () => {
+  const handleDownload = (e: React.MouseEvent) => {
+    e.preventDefault();
     const csvContent = selectedItems.map((item) => [
       item.title,
       item.description,
@@ -58,7 +59,11 @@ const Flyout: React.FC = () => {
       >
         Download
       </button>
-      <a ref={downloadLinkRef} style={{ display: 'none' }}></a>
+      <a
+        ref={downloadLinkRef}
+        style={{ display: 'none' }}
+        data-testid="download-link"
+      ></a>
     </div>
   );
 };

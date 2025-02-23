@@ -4,7 +4,7 @@ exports[`MainPage Component renders correctly with nasaId 1`] = `
 <div>
   <div
     class="main-page-container main-page-container__detail"
-    data-theme="light"
+    data-theme="dark"
   >
     <div
       class="app-header app-header__detail"
@@ -17,6 +17,7 @@ exports[`MainPage Component renders correctly with nasaId 1`] = `
         data-testid="theme-switch"
       >
         <input
+          checked=""
           class="theme-switch__toggle"
           id="theme-switch-toggle"
           type="checkbox"
@@ -57,7 +58,7 @@ exports[`MainPage Component renders correctly without nasaId 1`] = `
 <div>
   <div
     class="main-page-container "
-    data-theme="light"
+    data-theme="dark"
   >
     <div
       class="app-header "
@@ -70,6 +71,7 @@ exports[`MainPage Component renders correctly without nasaId 1`] = `
         data-testid="theme-switch"
       >
         <input
+          checked=""
           class="theme-switch__toggle"
           id="theme-switch-toggle"
           type="checkbox"

@@ -53,7 +53,7 @@ describe('DetailCard Component', () => {
   it('displays loading indicator while fetching data', () => {
     mockedUseGetImageDetailsQuery.mockReturnValue({
       data: null,
-      isLoading: true,
+      isFetching: true,
       error: null,
     });
 

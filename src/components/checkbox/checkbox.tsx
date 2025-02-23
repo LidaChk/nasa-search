@@ -30,8 +30,6 @@ const Checkbox = ({ nasaId }: CheckboxProps): React.JSX.Element => {
     }
   };
 
-  console.log({ isChecked });
-
   return (
     <input
       className="checkbox-input"
