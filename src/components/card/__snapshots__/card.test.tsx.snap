@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Card Component matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="card"
+  >
+    <input
+      class="checkbox-input"
+      id="test-nasa-id"
+      type="checkbox"
+    />
+    <a
+      class="card__image-container"
+      data-discover="true"
+      data-testid="img-link"
+      href="/search?q=moon&page=1&details=test-nasa-id"
+    >
+      <img
+        alt="Apollo 11 Mission Image"
+        class="card__image"
+        src="https://example.com/preview.jpg"
+      />
+    </a>
+    <a
+      class="card__content"
+      data-discover="true"
+      data-testid="card-link"
+      href="/search?q=moon&page=1&details=test-nasa-id"
+    >
+      <h3
+        class="card__title"
+      >
+        Apollo 11 Mission Image
+      </h3>
+      <p
+        class="card__description"
+      >
+        Test Description
+      </p>
+    </a>
+  </div>
+</DocumentFragment>
+`;

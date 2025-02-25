@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import './search.css';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { EMPTY_SEARCH, LS_KEY_SEARCH_TERM } from '../../constants/constants';
+import { LS_KEY_SEARCH_TERM } from '../../constants/constants';
 
-const Search: React.FC = () => {
-  const { searchTerm = '' } = useParams<{
-    searchTerm: string;
-  }>();
+const Search = (): React.JSX.Element => {
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('q') ?? '';
 
   const [searchTermLS, setSearchTermLS] = useLocalStorage(
     LS_KEY_SEARCH_TERM,
@@ -28,7 +27,10 @@ const Search: React.FC = () => {
     if (trimmedSearchTerm !== searchTermLS) {
       setSearchTermLS(trimmedSearchTerm);
     }
-    navigate(`/search/${trimmedSearchTerm || EMPTY_SEARCH}/1`);
+    navigate({
+      pathname: '/search',
+      search: `?q=${trimmedSearchTerm}&page=1`,
+    });
   };
 
   return (
@@ -37,7 +39,7 @@ const Search: React.FC = () => {
         type="search"
         className="search-input"
         placeholder="Search..."
-        value={inputValue === EMPTY_SEARCH ? '' : inputValue}
+        value={inputValue}
         onChange={handleInputChange}
       />
       <button className="search-button">Search</button>

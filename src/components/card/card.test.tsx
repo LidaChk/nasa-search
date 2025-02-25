@@ -2,13 +2,54 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
 import Card from './card';
-import { mockItem } from '../__mocks__/mocks';
+import { mockItem } from '../../__tests__/__mocks__/mocks';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
 
-const BrowserRouterComponent: React.FC = () => {
+const mockStore = configureStore({
+  reducer: {
+    nasaApi: (
+      state = {
+        queries: {},
+        mutations: {},
+        provided: {},
+        subscriptions: {},
+        config: {},
+      }
+    ) => state,
+    selectedItems: (state = {}) => state,
+  },
+  preloadedState: {
+    nasaApi: {
+      queries: {},
+      mutations: {},
+      provided: {},
+      subscriptions: {},
+      config: {},
+    },
+    selectedItems: {},
+  },
+});
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useSearchParams: () => [
+    new URLSearchParams({
+      q: 'moon',
+      page: '1',
+      details: 'test-nasa-id',
+    }),
+  ],
+  useNavigate: jest.fn(),
+}));
+
+const BrowserRouterComponent = (): React.JSX.Element => {
   return (
-    <BrowserRouter>
-      <Card {...mockItem} />
-    </BrowserRouter>
+    <Provider store={mockStore}>
+      <BrowserRouter>
+        <Card {...mockItem} />
+      </BrowserRouter>
+    </Provider>
   );
 };
 
@@ -24,23 +65,24 @@ describe('Card Component', () => {
     expect(screen.getByText(mockItem.description)).toBeInTheDocument();
     const image = screen.getByAltText(mockItem.title);
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('src', mockItem.preview.href);
+    expect(image).toHaveAttribute('src', mockItem.preview);
   });
 
   it('renders link with correct navigation path', () => {
     renderCard();
 
-    const link = screen.getByRole('link');
+    const link = screen.getByTestId('img-link');
     expect(link).toHaveAttribute(
       'href',
-      expect.stringContaining(`/details/${mockItem.nasaId}`)
+      expect.stringContaining(`details=${mockItem.nasaId}`)
     );
   });
 
   it('applies correct CSS classes', () => {
     renderCard();
 
-    expect(screen.getByRole('link')).toHaveClass('card');
+    expect(screen.getByTestId('img-link')).toHaveClass('card__image-container');
+    expect(screen.getByTestId('card-link')).toHaveClass('card__content');
     expect(screen.getByRole('img').parentElement).toHaveClass(
       'card__image-container'
     );
@@ -48,5 +90,10 @@ describe('Card Component', () => {
     expect(screen.getByText(mockItem.title).parentElement).toHaveClass(
       'card__content'
     );
+  });
+
+  it('matches the snapshot', () => {
+    const { asFragment } = renderCard();
+    expect(asFragment()).toMatchSnapshot();
   });
 });

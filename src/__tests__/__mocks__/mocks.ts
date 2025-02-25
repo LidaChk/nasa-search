@@ -4,6 +4,6 @@ export const mockItem = {
   description: 'Test Description',
   dateCreated: '2024-03-20T00:00:00Z',
   keywords: ['moon', 'space'],
-  preview: new URL('https://example.com/preview.jpg'),
-  href: new URL('https://example.com/image.jpg'),
+  preview: 'https://example.com/preview.jpg',
+  href: 'https://example.com/image.jpg',
 };

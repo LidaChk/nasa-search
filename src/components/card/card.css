@@ -1,6 +1,6 @@
 .card {
   display: grid;
-  grid-template-columns: 10rem 1fr;
+  grid-template-columns: auto 10rem 1fr;
   grid-template-rows: 10rem;
   padding: 1rem;
   gap: 2rem;

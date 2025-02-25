@@ -2,11 +2,11 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ErrorBoundary from './errorBoundary';
 
-const ErrorComponent: React.FC = () => {
+const ErrorComponent = (): React.JSX.Element => {
   throw new Error('Test error');
 };
 
-const NormalComponent: React.FC = () => <div>Normal component</div>;
+const NormalComponent = (): React.JSX.Element => <div>Normal component</div>;
 
 const originalError = console.error;
 beforeAll(() => {

@@ -8,6 +8,7 @@ module.exports = {
     '!src/setupTests.ts',
     '!src/reportWebVitals.ts',
     '!src/index.tsx',
+    '!src/__tests__/**',
   ],
   coverageDirectory: 'coverage',
   preset: 'ts-jest',
@@ -22,6 +23,7 @@ module.exports = {
     'package.json',
     'package-lock.json',
     'reportWebVitals.ts',
+    'src/__tests__',
   ],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   moduleNameMapper: {
@@ -31,10 +33,11 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   coverageThreshold: {
     global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
     },
   },
+  testPathIgnorePatterns: ['/node_modules/', '/__mocks__/', '/__tests__/'],
 };
