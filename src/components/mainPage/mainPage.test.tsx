@@ -4,14 +4,20 @@ import { MemoryRouter, Routes, Route } from 'react-router';
 import MainPage from './mainPage';
 
 jest.mock('../cardList/cardList', () => {
-  return function DummyCardList() {
+  return function DummyCardList(): React.JSX.Element {
     return <div data-testid="card-list">CardList Component</div>;
   };
 });
 
 jest.mock('../search/search', () => {
-  return function DummySearch() {
+  return function DummySearch(): React.JSX.Element {
     return <div data-testid="search">Search Component</div>;
+  };
+});
+
+jest.mock('../flyout/flyout', () => {
+  return function DummyFlyout(): React.JSX.Element {
+    return <div data-testid="flyout">Flyout Component</div>;
   };
 });
 
@@ -41,20 +47,13 @@ describe('MainPage Component', () => {
     };
 
     const route = withNasaId
-      ? '/search/moon/1/details/banana'
-      : '/search/moon/1';
+      ? '/search?q=moon&page=1&details=banana'
+      : '/search?q=moon&page=1';
 
     return render(
       <MemoryRouter initialEntries={[route]}>
         <Routes>
-          <Route
-            path="/search/:searchTerm/:currentPage"
-            element={<MainPage />}
-          />
-          <Route
-            path="/search/:searchTerm/:currentPage/details/:nasaId"
-            element={<MainPage />}
-          />
+          <Route path="/search" element={<MainPage />} />
         </Routes>
       </MemoryRouter>
     );
@@ -97,13 +96,9 @@ describe('MainPage Component', () => {
     expect(screen.getByTestId('card-list')).toBeInTheDocument();
   });
 
-  it('navigates back when clicking container with nasaId', () => {
-    const { container } = renderWithRouter(true);
-    const mainContainer = container.querySelector('.main-page-container');
-    if (mainContainer) {
-      fireEvent.click(mainContainer);
-    }
-    expect(mockNavigate).toHaveBeenCalledWith('/search/moon/1');
+  it('renders Flyout component', () => {
+    renderWithRouter();
+    expect(screen.getByTestId('flyout')).toBeInTheDocument();
   });
 
   it('does not navigate when clicking container without nasaId', () => {
@@ -113,11 +108,5 @@ describe('MainPage Component', () => {
       fireEvent.click(mainContainer);
     }
     expect(mockNavigate).not.toHaveBeenCalled();
-  });
-  afterAll(() => {
-    const _dummyComponent: React.FC = () => {
-      return <div>dummy</div>;
-    };
-    render(<_dummyComponent />);
   });
 });

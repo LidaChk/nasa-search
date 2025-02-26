@@ -4,8 +4,8 @@ export interface SearchResultItem {
   description: string;
   dateCreated: string;
   keywords?: string[];
-  preview: URL;
-  href: URL;
+  preview: string;
+  href: string;
 }
 
 export interface PaginationInfo {

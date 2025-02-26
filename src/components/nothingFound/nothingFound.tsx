@@ -5,9 +5,9 @@ interface NothingFoundProp {
   message?: string;
 }
 
-const NothingFound: React.FC<NothingFoundProp> = ({
+const NothingFound = ({
   message = 'Nothing was found',
-}) => {
+}: NothingFoundProp): React.JSX.Element => {
   return (
     <div
       className="error-container error-container__nothing"

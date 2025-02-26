@@ -1,58 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
-import { SearchResultItem } from '../../types/types';
-import { searchImages } from '../../api/nasaApi';
+import React from 'react';
+import { Link, useSearchParams } from 'react-router';
+import { useGetImageDetailsQuery } from '../../store/nasaApi/nasaApi';
 import Loader from '../loader/loader';
 import './detailCard.css';
 
-const DetailCard: React.FC = () => {
-  const { nasaId, searchTerm, currentPage } = useParams();
+const DetailCard = (): React.JSX.Element => {
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('q');
+  const currentPage = searchParams.get('page') || '1';
+  const nasaId = searchParams.get('details');
 
-  const [item, setItem] = useState<SearchResultItem | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchDetails = async () => {
-      if (!nasaId) return;
-
-      try {
-        setIsLoading(true);
-        setError(null);
-        const response = await searchImages({ nasaId });
-        if (response.items.length > 0) {
-          setItem(response.items[0]);
-        } else {
-          setError('Not found');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'fetching data failed');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchDetails();
-  }, [nasaId]);
+  const {
+    data: item,
+    isFetching,
+    error,
+  } = useGetImageDetailsQuery(nasaId ?? '', {
+    skip: !nasaId,
+  });
 
   if (error) {
-    throw new Error(error);
+    let errorMessage = 'An error occurred';
+    if ('data' in error) {
+      errorMessage =
+        'error' in error ? error.error : JSON.stringify(error.data);
+    }
+    throw new Error(errorMessage);
   }
 
   return (
     <div
-      className={`detail-item ${isLoading ? 'detail-item--loader' : 'detail-item--card'}`}
+      className={`detail-item ${
+        isFetching ? 'detail-item--loader' : 'detail-item--card'
+      }`}
     >
-      {isLoading ? (
+      {isFetching ? (
         <Loader />
       ) : (
         item && (
           <>
             <div className="detail-item__image-container">
               <img
-                src={item.href.href}
+                src={item.href}
                 alt={item.title}
                 className="detail-item__image"
+                loading="eager"
               />
             </div>
             <div className="detail-item__content detail-item__content--card">
@@ -81,7 +72,7 @@ const DetailCard: React.FC = () => {
               </div>
             </div>
             <Link
-              to={`/search/${searchTerm}/${currentPage}`}
+              to={`/search?q=${searchTerm}&page=${currentPage}`}
               className="close-button"
             >
               <h3>x</h3>

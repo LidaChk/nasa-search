@@ -1,129 +1,135 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
+import { useGetImageDetailsQuery } from '../../store/nasaApi/nasaApi';
+import { mockItem } from '../../__tests__/__mocks__/mocks';
 import DetailCard from './detailCard';
-import { searchImages } from '../../api/nasaApi';
-import { mockItem } from '../__mocks__/mocks';
 
-jest.mock('../../api/nasaApi');
-const mockedSearchImages = jest.mocked(searchImages);
+jest.mock('../../store/nasaApi/nasaApi', () => ({
+  useGetImageDetailsQuery: jest.fn(),
+}));
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useParams: () => ({
-    nasaId: 'test-nasa-id',
-    searchTerm: 'moon',
-    currentPage: '1',
-  }),
+  useSearchParams: () => [
+    new URLSearchParams({
+      q: 'moon',
+      page: '1',
+      details: 'test-nasa-id',
+    }),
+  ],
+  useNavigate: jest.fn(),
 }));
 
+const mockedUseGetImageDetailsQuery = useGetImageDetailsQuery as jest.Mock;
+
 describe('DetailCard Component', () => {
+  const renderDetailCard = () => {
+    render(
+      <BrowserRouter>
+        <DetailCard />
+      </BrowserRouter>
+    );
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('triggers API call to fetch detailed information on mount', async () => {
-    mockedSearchImages.mockResolvedValue({
-      items: [mockItem],
-      pagination: {
-        currentPage: 1,
-        totalPages: 1,
-        pageSize: 1,
-      },
+  it('makes API call with correct parameters', () => {
+    mockedUseGetImageDetailsQuery.mockReturnValue({
+      data: null,
+      isLoading: true,
+      error: null,
     });
 
-    await act(async () => {
-      render(
-        <BrowserRouter>
-          <DetailCard />
-        </BrowserRouter>
-      );
-    });
+    renderDetailCard();
 
-    expect(mockedSearchImages).toHaveBeenCalledTimes(1);
-    expect(mockedSearchImages).toHaveBeenCalledWith({ nasaId: 'test-nasa-id' });
+    expect(mockedUseGetImageDetailsQuery).toHaveBeenCalledWith('test-nasa-id', {
+      skip: false,
+    });
   });
 
-  it('displays loading indicator while fetching data', async () => {
-    mockedSearchImages.mockImplementation(
-      () => new Promise((resolve) => setTimeout(resolve, 100))
-    );
-
-    await act(async () => {
-      render(
-        <BrowserRouter>
-          <DetailCard />
-        </BrowserRouter>
-      );
+  it('displays loading indicator while fetching data', () => {
+    mockedUseGetImageDetailsQuery.mockReturnValue({
+      data: null,
+      isFetching: true,
+      error: null,
     });
+
+    renderDetailCard();
 
     expect(screen.getByLabelText('loading')).toBeInTheDocument();
   });
 
-  it('displays detailed card data correctly after loading', async () => {
-    mockedSearchImages.mockResolvedValue({
-      items: [mockItem],
-      pagination: {
-        currentPage: 1,
-        totalPages: 1,
-        pageSize: 1,
-      },
+  it('displays detailed card data correctly after loading', () => {
+    mockedUseGetImageDetailsQuery.mockReturnValue({
+      data: mockItem,
+      isLoading: false,
+      error: null,
     });
 
-    await act(async () => {
-      render(
-        <BrowserRouter>
-          <DetailCard />
-        </BrowserRouter>
-      );
-    });
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('loader')).not.toBeInTheDocument();
-    });
+    renderDetailCard();
 
     expect(screen.getByText(mockItem.title)).toBeInTheDocument();
     expect(screen.getByText(mockItem.description)).toBeInTheDocument();
 
     const image = screen.getByAltText(mockItem.title);
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('src', mockItem.href.href);
+    expect(image).toHaveAttribute('src', mockItem.href);
 
     mockItem.keywords.forEach((keyword) => {
       expect(screen.getByText(keyword)).toBeInTheDocument();
     });
   });
 
-  it('navigates back when clicking close button', async () => {
-    mockedSearchImages.mockResolvedValue({
-      items: [mockItem],
-      pagination: {
-        currentPage: 1,
-        totalPages: 1,
-        pageSize: 1,
-      },
+  it('throws error when API call fails', () => {
+    const errorMessage = 'API Error';
+    mockedUseGetImageDetailsQuery.mockReturnValue({
+      data: null,
+      isLoading: false,
+      error: { data: errorMessage },
     });
 
-    await act(async () => {
-      render(
-        <BrowserRouter>
-          <DetailCard />
-        </BrowserRouter>
-      );
+    expect(() => renderDetailCard()).toThrow(errorMessage);
+  });
+
+  it('displays close button with correct link', () => {
+    mockedUseGetImageDetailsQuery.mockReturnValue({
+      data: mockItem,
+      isLoading: false,
+      error: null,
     });
 
-    await waitFor(() => {
-      expect(screen.queryByTestId('loader')).not.toBeInTheDocument();
-    });
+    renderDetailCard();
 
     const closeButton = screen.getByText('x');
     expect(closeButton).toBeInTheDocument();
 
     const closeLink = closeButton.closest('a');
-    expect(closeLink).toHaveAttribute('href', '/search/moon/1');
+    expect(closeLink).toHaveAttribute('href', '/search?q=moon&page=1');
+  });
+
+  it('skips query when nasaId is not provided', () => {
+    jest.spyOn(URLSearchParams.prototype, 'get').mockImplementation((param) => {
+      if (param === 'details') return null;
+      return param === 'q' ? 'moon' : '1';
+    });
+
+    mockedUseGetImageDetailsQuery.mockReturnValue({
+      data: null,
+      isLoading: false,
+      error: null,
+    });
+
+    renderDetailCard();
+
+    expect(mockedUseGetImageDetailsQuery).toHaveBeenCalledWith('', {
+      skip: true,
+    });
   });
   afterAll(() => {
-    const _dummyComponent: React.FC = () => {
+    const _dummyComponent = (): React.JSX.Element => {
       return <div>dummy</div>;
     };
     render(<_dummyComponent />);

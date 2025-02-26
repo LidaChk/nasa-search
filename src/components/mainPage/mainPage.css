@@ -1,5 +1,25 @@
+.main-page-container[data-theme='light'] {
+  --background-color: #f9f9f9;
+  --btn-text-color: #f9f9f9;
+  --text-color: #222;
+  --primary-act-color: #007acc;
+  --primary-act-color-transparent: rgba(0, 122, 204, 0.3);
+  --secondary-act-color: #ff9100;
+  --accent-color: #6a11cb;
+  --hover-filter: brightness(115%);
+  --active-filter: brightness(90%);
+}
+
 .main-page-container {
-  margin: 0 auto;
+  background-color: var(--background-color);
+  background: url(../../assets/noise.svg), var(--background-color);
+  background-size: contain;
+  background-attachment: fixed;
+  color: var(--text-color);
+}
+
+.main-page-container {
+  margin: 0;
   padding: 0;
   text-align: center;
   display: grid;
@@ -12,6 +32,12 @@
   margin: 0;
   flex-wrap: wrap;
 }
+.main-page-container__detail > div {
+  border-right: 2px var(--primary-act-color) solid;
+}
+.main-page-container__detail > .details-section {
+  border-right: none;
+}
 
 .app-header {
   position: sticky;
@@ -22,6 +48,7 @@
 }
 
 .main-page {
+  margin: 0 auto;
   max-width: 1280px;
   display: flex;
   display: grid;
@@ -32,7 +59,6 @@
 
 .details-section {
   width: 100%;
-  border-left: 2px solid var(--primary-act-color);
   overflow-y: auto;
   position: relative;
   overflow: hidden;
